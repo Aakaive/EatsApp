@@ -19,4 +19,11 @@ public class OrderService {
 
         return new OrderResponseDto(RequestOrder);
     }
+
+    public OrderResponseDto getOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() ->
+                new IllegalArgumentException("유효한 주문번호가 아닙니다."));
+
+        return new OrderResponseDto(order);
+    }
 }

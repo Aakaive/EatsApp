@@ -27,4 +27,10 @@ public class OrderController {
     public ResponseEntity<OrderResponseDto> getOrder(@PathVariable Long orderId) {
         return ResponseEntity.ok(orderService.getOrder(orderId));
     }
+
+    // 주문 취소
+    @PatchMapping("/order/{orderId}")
+    public ResponseEntity<String> cancelOrder(@PathVariable Long orderId) {
+        return ResponseEntity.ok(orderService.cancelOrder(orderId));
+    }
 }

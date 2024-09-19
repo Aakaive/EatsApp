@@ -57,4 +57,8 @@ public class Order extends Timestamped {
         this.totalPrice = this.deliveryFee + (this.price * this.number);
         this.orderStatus = OrderStatus.REQUEST;
     }
+
+    public void cancelOrder() {
+        this.orderStatus = OrderStatus.CANCEL;
+    }
 }

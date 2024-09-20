@@ -2,7 +2,7 @@ package com.sparta.eatsapp.restaurant.controller;
 
 
 import com.sparta.eatsapp.restaurant.dto.RestaurantRequestDto;
-import com.sparta.eatsapp.restaurant.dto.ResponseRestaurantDto;
+import com.sparta.eatsapp.restaurant.dto.RestaurantResponseDto;
 import com.sparta.eatsapp.restaurant.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,14 +16,14 @@ public class RestaurantController {
     private final RestaurantService restaurantService;
 
     @PostMapping
-    public ResponseEntity<ResponseRestaurantDto> createRestaurant(@RequestBody RestaurantRequestDto requestDto) {
-        ResponseRestaurantDto responseDto = restaurantService.createRestaurant(requestDto);
+    public ResponseEntity<RestaurantResponseDto> createRestaurant(@RequestBody RestaurantRequestDto requestDto) {
+        RestaurantResponseDto responseDto = restaurantService.createRestaurant(requestDto);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     @PatchMapping
-    public ResponseEntity<ResponseRestaurantDto> updateRestaurant(@RequestBody RestaurantRequestDto requestDto) {
-        ResponseRestaurantDto responseDto = restaurantService.updateRestaurant(requestDto);
+    public ResponseEntity<RestaurantResponseDto> updateRestaurant(@RequestBody RestaurantRequestDto requestDto) {
+        RestaurantResponseDto responseDto = restaurantService.updateRestaurant(requestDto);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 }

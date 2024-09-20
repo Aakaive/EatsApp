@@ -21,9 +21,9 @@ public class RestaurantController {
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
-    @PatchMapping
-    public ResponseEntity<RestaurantResponseDto> updateRestaurant(@RequestBody RestaurantRequestDto requestDto) {
-        RestaurantResponseDto responseDto = restaurantService.updateRestaurant(requestDto);
+    @PatchMapping("/{id}")
+    public ResponseEntity<RestaurantResponseDto> updateRestaurant(@RequestBody RestaurantRequestDto requestDto, @PathVariable Long id) {
+        RestaurantResponseDto responseDto = restaurantService.updateRestaurant(requestDto, id);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 }

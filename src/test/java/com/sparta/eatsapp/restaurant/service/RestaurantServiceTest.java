@@ -1,7 +1,7 @@
 package com.sparta.eatsapp.restaurant.service;
 
 import com.sparta.eatsapp.restaurant.dto.RestaurantRequestDto;
-import com.sparta.eatsapp.restaurant.dto.ResponseRestaurantDto;
+import com.sparta.eatsapp.restaurant.dto.RestaurantResponseDto;
 import com.sparta.eatsapp.restaurant.entity.Restaurant;
 import com.sparta.eatsapp.restaurant.repository.RestaurantRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,7 +45,7 @@ class RestaurantServiceTest {
         when(restaurantRepository.save(any(Restaurant.class))).thenReturn(restaurant);
 
         // when
-        ResponseRestaurantDto response = restaurantService.createRestaurant(restaurantRequestDto);
+        RestaurantResponseDto response = restaurantService.createRestaurant(restaurantRequestDto);
 
         // then
         assertNotNull(response);
@@ -54,6 +54,29 @@ class RestaurantServiceTest {
         assertEquals(LocalTime.of(9, 0), response.getOpeningTime());
         assertEquals(LocalTime.of(22, 0), response.getClosingTime());
 
+        verify(restaurantRepository, times(1)).save(any(Restaurant.class));
+    }
+
+    @Test
+    void testUpdateRestaurant() {
+        RestaurantRequestDto requestDto = new RestaurantRequestDto();
+        requestDto.setRestaurantName("modified name");
+        long id = restaurant.getId();
+
+
+
+        // given
+        when(restaurantRepository.findById(id)).thenReturn(java.util.Optional.of(restaurant));
+        when(restaurantRepository.save(any(Restaurant.class))).thenReturn(restaurant);  // save 이후 업데이트된 값을 반환
+
+        // when
+        RestaurantResponseDto response = restaurantService.updateRestaurant(requestDto, id);
+
+        // then
+        assertNotNull(response);
+        assertEquals("modified name", response.getRestaurantName());
+
+        verify(restaurantRepository, times(1)).findById(id);
         verify(restaurantRepository, times(1)).save(any(Restaurant.class));
     }
 }

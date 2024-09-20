@@ -24,7 +24,25 @@ public class RestaurantService {
         return new RestaurantResponseDto(savedRestaurant);
     }
 
-    public RestaurantResponseDto updateRestaurant(RestaurantRequestDto requestDto) {
-        return null;
+    public RestaurantResponseDto updateRestaurant(RestaurantRequestDto requestDto, Long id) {
+        Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException()
+        );
+
+        if (requestDto.getRestaurantName() != null) {
+            restaurant.setRestaurantName(requestDto.getRestaurantName());
+        }
+        if (requestDto.getMinimumPrice() != null) {
+            restaurant.setMinimumPrice(requestDto.getMinimumPrice());
+        }
+        if (requestDto.getOpeningTime() != null) {
+            restaurant.setOpeningTime(requestDto.getOpeningTime());
+        }
+        if (requestDto.getClosingTime() != null) {
+            restaurant.setClosingTime(requestDto.getClosingTime());
+        }
+
+        Restaurant updatedRestaurant = restaurantRepository.save(restaurant);
+        return new RestaurantResponseDto(updatedRestaurant);
     }
 }

@@ -3,6 +3,8 @@ package com.sparta.eatsapp.review.repository;
 import com.sparta.eatsapp.review.entity.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ReviewRepository extends JpaRepository<Review, Long> {
+import java.util.List;
 
+public interface ReviewRepository extends JpaRepository<Review, Long> {
+    List<Review> findAllByMarketId(Long marketId);
 }

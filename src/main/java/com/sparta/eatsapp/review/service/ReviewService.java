@@ -9,6 +9,9 @@ import com.sparta.eatsapp.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
@@ -17,10 +20,22 @@ public class ReviewService {
     private final OrderService orderService;
 
     public ReviewResponseDto save(ReviewRequestDto requestDto) {
-        Review review = new Review(requestDto);
+        Order order = orderService.findByOrderId(requestDto.getOrderId());
+        Review review = new Review(requestDto, order);
         Review savedReview = reviewReqository.save(review);
-        Order order = orderService.findByOrderId(savedReview.getOrderId());
 
         return new ReviewResponseDto(savedReview, order);
+    }
+
+    public List<ReviewResponseDto> getReviews(Long marketId) {
+        List<Review> reviews = reviewReqository.findAllByMarketId(marketId);
+
+        List<ReviewResponseDto> reviewLists = new ArrayList<>();
+        for(Review reviewList : reviews){
+            Order order = orderService.findByOrderId(reviewList.getOrderId());
+            reviewLists.add(new ReviewResponseDto(reviewList, order));
+        }
+
+        return reviewLists;
     }
 }

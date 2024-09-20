@@ -29,4 +29,10 @@ public class ReviewController {
     public ResponseEntity<List<ReviewResponseDto>> getReivews(@PathVariable Long restaurantId) {
         return ResponseEntity.ok(reviewService.getReviews(restaurantId));
     }
+
+    // 리뷰 수정
+    @PutMapping("/review/{reviewId}")
+    public ResponseEntity<ReviewResponseDto> modifiedReview(@PathVariable Long reviewId, @RequestBody ReviewRequestDto requestDto) {
+        return ResponseEntity.ok(reviewService.modifiedReview(reviewId, requestDto));
+    }
 }

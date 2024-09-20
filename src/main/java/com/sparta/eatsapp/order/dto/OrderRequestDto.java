@@ -6,10 +6,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class OrderRequestDto {
-    Long marketId;
-    String marketName;
-    String menuName;
-    int price;
-    String customerRequest;
-    int number;
+    private Long marketId;
+    private String marketName;
+    private String menuName;
+    private int price;
+    private String customerRequest;
+    private int number;
 }

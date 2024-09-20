@@ -9,18 +9,18 @@ import java.time.LocalDateTime;
 @Getter
 public class OrderResponseDto {
 
-    Long orderId;
-    String customerName;
+    private Long orderId;
+    private String customerName;
     //String marketName;
-    Long marketId;
-    String menuName;
-    int price;
-    int number;
-    String customerRequest;
-    int deliveryFee;
-    int totalPrice;
-    OrderStatus orderStatus;
-    LocalDateTime orderTime;
+    private Long marketId;
+    private String menuName;
+    private int price;
+    private int number;
+    private String customerRequest;
+    private int deliveryFee;
+    private int totalPrice;
+    private OrderStatus orderStatus;
+    private LocalDateTime orderTime;
 
     public OrderResponseDto(Order order) {
         this.orderId = order.getOrderId();

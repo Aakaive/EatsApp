@@ -1,7 +1,10 @@
 package com.sparta.eatsapp.user.entity;
 
+import com.sparta.eatsapp.user.enums.UserRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,7 +24,8 @@ public class User {
   private String email;
   @Column(length = 64)
   private String password;
-  private String role;
+  @Enumerated(EnumType.STRING)
+  private UserRole role;
   private int market_count;
   private String name;
   private String nickname;
@@ -30,7 +34,7 @@ public class User {
   @Column(columnDefinition = "TINYINT(1)")
   private boolean is_deleted;
 
-  public User(String email, String encryptedPassword, String name, String address, String role,
+  public User(String email, String encryptedPassword, String name, String address, UserRole role,
       String nickname) {
     this.email = email;
     this.password = encryptedPassword;

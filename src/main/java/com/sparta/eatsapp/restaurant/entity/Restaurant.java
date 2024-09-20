@@ -1,12 +1,16 @@
 package com.sparta.eatsapp.restaurant.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalTime;
 
 @Entity
 @NoArgsConstructor
+@Getter
+@Setter
 public class Restaurant {
 
     @Id
@@ -29,5 +33,5 @@ public class Restaurant {
     private LocalTime closingTime;
 
     @Column(nullable = false)
-    boolean status = true;
+    private boolean status = true;
 }

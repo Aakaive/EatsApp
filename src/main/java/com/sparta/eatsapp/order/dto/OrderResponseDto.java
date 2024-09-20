@@ -25,7 +25,7 @@ public class OrderResponseDto {
     public OrderResponseDto(Order order) {
         this.orderId = order.getOrderId();
         //this.customerName = customerName;
-        this.marketId = order.getMarketId();
+        this.marketId = order.getRestaurantId();
         this.menuName = order.getMenuName();
         this.number = order.getNumber();
         this.customerRequest = order.getCustomerRequest();

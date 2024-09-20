@@ -17,8 +17,8 @@ public class Order extends Timestamped {
     @Column(name = "orderId")
     private Long orderId;
 
-    @Column(name = "marketId", nullable = false, length = 20)
-    private Long marketId;
+    @Column(name = "restaurantId", nullable = false, length = 20)
+    private Long restaurantId;
 
     @Column(name = "menuName", nullable = false, length = 20)
     private String menuName;
@@ -48,7 +48,7 @@ public class Order extends Timestamped {
     // User user
 
     public Order(OrderRequestDto requestDto) {
-        this.marketId = requestDto.getMarketId();
+        this.restaurantId = requestDto.getRestaurantId();
         this.menuName = requestDto.getMenuName();
         this.price = requestDto.getPrice();
         this.number = requestDto.getNumber();

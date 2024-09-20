@@ -6,8 +6,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class OrderRequestDto {
-    private Long marketId;
-    private String marketName;
+    private Long restaurantId;
+    private String restaurantName;
     private String menuName;
     private int price;
     private String customerRequest;

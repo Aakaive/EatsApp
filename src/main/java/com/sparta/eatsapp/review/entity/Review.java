@@ -24,7 +24,7 @@ public class Review extends Timestamped {
     private Long orderId;
 
     @Column(name = "marketId", nullable = false, length = 20)
-    private Long marketId;
+    private Long restaurantId;
 
     @Column(name = "content", nullable = false, length = 100)
     private String content;
@@ -34,7 +34,7 @@ public class Review extends Timestamped {
 
     public Review(ReviewRequestDto requestDto, Order order) {
         this.orderId = requestDto.getOrderId();
-        this.marketId = order.getMarketId();
+        this.restaurantId = order.getRestaurantId();
         this.content = requestDto.getContent();
         this.star = requestDto.getStar();
     }

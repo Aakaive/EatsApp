@@ -2,6 +2,7 @@ package com.sparta.eatsapp.auth.service;
 
 import com.sparta.eatsapp.auth.dto.request.SignupRequest;
 import com.sparta.eatsapp.auth.dto.response.SignupResponse;
+import com.sparta.eatsapp.config.PasswordEncoder;
 import com.sparta.eatsapp.user.entity.User;
 import com.sparta.eatsapp.user.enums.UserRole;
 import com.sparta.eatsapp.user.repository.UserRepository;
@@ -14,11 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
 
   private final UserRepository userRepository;
+  private final PasswordEncoder passwordEncoder;
 
   @Transactional
   public SignupResponse signup(SignupRequest signupRequest) {
 
-    String encryptedPassword = signupRequest.getPwd();
+    String encryptedPassword = passwordEncoder.encode(signupRequest.getPwd());
     User user = new User(
         signupRequest.getEmail(),
         encryptedPassword,

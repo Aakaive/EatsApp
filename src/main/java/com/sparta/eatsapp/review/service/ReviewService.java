@@ -28,7 +28,7 @@ public class ReviewService {
     }
 
     public List<ReviewResponseDto> getReviews(Long marketId) {
-        List<Review> reviews = reviewReqository.findAllByMarketId(marketId);
+        List<Review> reviews = reviewReqository.findAllByRestaurantId(marketId);
 
         List<ReviewResponseDto> reviewLists = new ArrayList<>();
         for(Review reviewList : reviews){

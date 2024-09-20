@@ -8,7 +8,7 @@ import java.time.LocalTime;
 
 @Getter
 @Setter
-public class ResponseRestaurantDto {
+public class RestaurantResponseDto {
     private Long id;
     private String restaurantName;
     private LocalTime openingTime;
@@ -16,7 +16,7 @@ public class ResponseRestaurantDto {
     private Long minimumPrice;
     private boolean status;
 
-    public ResponseRestaurantDto(Restaurant restaurant) {
+    public RestaurantResponseDto(Restaurant restaurant) {
         this.id = restaurant.getId();
         this.restaurantName = restaurant.getRestaurantName();
         this.openingTime = restaurant.getOpeningTime();

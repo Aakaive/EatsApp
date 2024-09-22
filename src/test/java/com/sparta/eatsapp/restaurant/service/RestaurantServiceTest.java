@@ -79,4 +79,24 @@ class RestaurantServiceTest {
         verify(restaurantRepository, times(1)).findById(id);
         verify(restaurantRepository, times(1)).save(any(Restaurant.class));
     }
+
+    @Test
+    void testDeleteRestaurant() {
+        // given
+        long id = restaurant.getId();
+
+        when(restaurantRepository.findById(id)).thenReturn(java.util.Optional.of(restaurant));
+
+        // when
+        Long deletedRestaurantId = restaurantService.deleteRestaurant(id);
+
+        // then
+        assertNotNull(deletedRestaurantId);
+        assertEquals(id, deletedRestaurantId);
+        assertFalse(restaurant.isStatus()); // restaurant의 상태가 false로 변경되었는지 확인
+
+        verify(restaurantRepository, times(1)).findById(id);
+        verify(restaurantRepository, times(1)).save(restaurant); // 상태 변경 후 저장되는지 확인
+    }
+
 }

@@ -45,4 +45,13 @@ public class RestaurantService {
         Restaurant updatedRestaurant = restaurantRepository.save(restaurant);
         return new RestaurantResponseDto(updatedRestaurant);
     }
+
+    public Long deleteRestaurant(Long id) {
+        Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("Restaurant not found")
+        );
+        restaurant.setStatus(false);
+        restaurantRepository.save(restaurant);
+        return restaurant.getId();
+    }
 }

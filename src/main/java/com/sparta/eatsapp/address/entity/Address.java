@@ -2,6 +2,8 @@ package com.sparta.eatsapp.address.entity;
 
 import com.sparta.eatsapp.user.entity.User;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -15,6 +17,7 @@ import lombok.Setter;
 public class Address {
 
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private String address;
   private String location;

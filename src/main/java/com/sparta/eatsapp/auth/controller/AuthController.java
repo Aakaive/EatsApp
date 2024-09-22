@@ -1,5 +1,6 @@
 package com.sparta.eatsapp.auth.controller;
 
+import com.sparta.eatsapp.auth.dto.request.SigninRequest;
 import com.sparta.eatsapp.auth.dto.request.SignupRequest;
 import com.sparta.eatsapp.auth.dto.response.SignupResponse;
 import com.sparta.eatsapp.auth.service.AuthService;
@@ -24,5 +25,11 @@ public class AuthController {
     return ResponseEntity
         .status(HttpStatus.CREATED)
         .body(signupResponse);
+  }
+
+  @PostMapping("/signin")
+  public ResponseEntity<String> signin(@RequestBody SigninRequest signinRequest) {
+    String token = authService.signin(signinRequest);
+    return ResponseEntity.status(HttpStatus.OK).body(token);
   }
 }

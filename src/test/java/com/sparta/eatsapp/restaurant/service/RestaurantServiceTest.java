@@ -14,6 +14,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.List;
 
 class RestaurantServiceTest {
 
@@ -24,11 +26,15 @@ class RestaurantServiceTest {
     private RestaurantService restaurantService;
 
     private RestaurantRequestDto restaurantRequestDto;
+
     private Restaurant restaurant;
+    private Restaurant restaurant2;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+
+        // 첫 번째 레스토랑 설정
         restaurantRequestDto = new RestaurantRequestDto("Test Restaurant", 10000L, LocalTime.of(9, 0), LocalTime.of(22, 0));
         restaurant = new Restaurant();
         restaurant.setId(1L);
@@ -37,6 +43,15 @@ class RestaurantServiceTest {
         restaurant.setOpeningTime(LocalTime.of(9, 0));
         restaurant.setClosingTime(LocalTime.of(22, 0));
         restaurant.setStatus(true);
+
+        // 두 번째 레스토랑 설정
+        restaurant2 = new Restaurant();
+        restaurant2.setId(2L);
+        restaurant2.setRestaurantName("Restaurant 2");
+        restaurant2.setMinimumPrice(15000L);
+        restaurant2.setOpeningTime(LocalTime.of(10, 0));
+        restaurant2.setClosingTime(LocalTime.of(21, 0));
+        restaurant2.setStatus(true);
     }
 
     @Test
@@ -97,6 +112,24 @@ class RestaurantServiceTest {
 
         verify(restaurantRepository, times(1)).findById(id);
         verify(restaurantRepository, times(1)).save(restaurant); // 상태 변경 후 저장되는지 확인
+    }
+
+    @Test
+    void testGetAllRestaurants() {
+        // given
+        List<Restaurant> restaurants = Arrays.asList(restaurant, restaurant2);
+        when(restaurantRepository.findAll()).thenReturn(restaurants);
+
+        // when
+        List<Restaurant> result = restaurantService.getAllRestaurants();
+
+        // then
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals("Test Restaurant", result.get(0).getRestaurantName());
+        assertEquals("Restaurant 2", result.get(1).getRestaurantName());
+
+        verify(restaurantRepository, times(1)).findAll();
     }
 
 }

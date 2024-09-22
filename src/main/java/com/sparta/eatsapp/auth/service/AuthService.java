@@ -31,7 +31,7 @@ public class AuthService {
 
     String encryptedPassword = passwordEncoder.encode(signupRequest.getPwd());
     Password password = new Password(encryptedPassword);
-    Address address = new Address(signupRequest.getAddress());
+    Address address = new Address(signupRequest.getAddress(),signupRequest.getLocation());
 
     User user = new User(
         signupRequest.getEmail(),

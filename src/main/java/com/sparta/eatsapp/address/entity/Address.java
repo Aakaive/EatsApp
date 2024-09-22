@@ -19,7 +19,9 @@ public class Address {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+  @Setter
   private String address;
+  @Setter
   private String location;
 
   @ManyToOne
@@ -27,7 +29,8 @@ public class Address {
   @JoinColumn(name = "user_id")
   private User user;
 
-  public Address(String address) {
+  public Address(String address, String location) {
     this.address = address;
+    this.location = location;
   }
 }

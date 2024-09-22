@@ -7,4 +7,6 @@ public class ReviewRequestDto {
     private Long orderId;
     private String content;
     private int star;
+    private int min;
+    private int max;
 }

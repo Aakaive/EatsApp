@@ -34,8 +34,20 @@ public class ReviewService {
         return new ReviewResponseDto(savedReview, order);
     }
 
-    public List<ReviewResponseDto> getReviews(Long marketId) {
-        List<Review> reviews = reviewRepository.findAllByRestaurantId(marketId);
+    public List<ReviewResponseDto> getReviews(Long marketId, ReviewRequestDto requestDto) {
+        int minValue;
+        int maxValue;
+
+        // 조회 할 리뷰의 별점 최소값
+        if(requestDto.getMin() == 0)
+            minValue = 1;
+
+        // 조회 할 리뷰의 별점 최대값
+        if(requestDto.getMax() == 0)
+            minValue = 5;
+
+        // 매장의 별점 최솟값, 최댓값 기준으로 최신순으로 정렬
+        List<Review> reviews = reviewRepository.findAllByRestaurantIdAndStarBetweenOrderByCreatedAtDesc(marketId, requestDto.getMin(), requestDto.getMax());
 
         List<ReviewResponseDto> reviewLists = new ArrayList<>();
         for(Review reviewList : reviews){

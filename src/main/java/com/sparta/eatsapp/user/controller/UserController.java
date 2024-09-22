@@ -1,7 +1,9 @@
 package com.sparta.eatsapp.user.controller;
 
+import com.sparta.eatsapp.user.dto.response.UserResponse;
 import com.sparta.eatsapp.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,8 +18,8 @@ public class UserController {
   private final UserService userService;
 
   @GetMapping("/{userid}")
-  public ResponseEntity getUser(@PathVariable Long userid){
-    userService.getUser(userid);
-    return null;
+  public ResponseEntity<UserResponse> getUser(@PathVariable Long userid) {
+    UserResponse userResponse = userService.getUser(userid);
+    return ResponseEntity.status(HttpStatus.OK).body(userResponse);
   }
 }

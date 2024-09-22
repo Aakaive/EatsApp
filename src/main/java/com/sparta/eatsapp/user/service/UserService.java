@@ -9,11 +9,12 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+
   private final UserRepository userRepository;
 
   public UserResponse getUser(Long userid) {
-    //
-    User user = userRepository.findById(userid).orElseThrow();
-    return null;
+    User user = userRepository.findById(userid)
+        .orElseThrow(() -> new IllegalArgumentException("등록된 유저가 없습니다."));
+    return new UserResponse(user);
   }
 }

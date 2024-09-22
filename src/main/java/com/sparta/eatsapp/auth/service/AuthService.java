@@ -28,8 +28,10 @@ public class AuthService {
 
   @Transactional
   public SignupResponse signup(SignupRequest signupRequest) {
-
-    String encryptedPassword = passwordEncoder.encode(signupRequest.getPwd());
+    if(!userRepository.findByEmail(signupRequest.getEmail()).isEmpty()){
+      throw new IllegalArgumentException("이미 등록된 이메일 입니다.");
+    }
+    String encryptedPassword = passwordEncoder.encode(signupRequest.getPassword());
     Password password = new Password(encryptedPassword);
     Address address = new Address(signupRequest.getAddress(),signupRequest.getLocation());
 
@@ -41,6 +43,7 @@ public class AuthService {
     );
     user.addAddresses(address);
     user.setPassword(password);
+    password.setUser(user);
     passwordRepository.save(password);
     addressRepository.save(address);
     User savedUser = userRepository.save(user);

@@ -8,6 +8,7 @@ import com.sparta.eatsapp.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,9 +30,16 @@ public class UserController {
   }
 
   @PatchMapping("/{userid}")
-  public ResponseEntity<UserResponse> updateUser(@Auth AuthUser authUser,@PathVariable Long userid,@RequestBody
+  public ResponseEntity<UserResponse> updateUser(@Auth AuthUser authUser, @PathVariable Long userid,
+      @RequestBody
       UserPatchRequest userPatchRequest) {
-    UserResponse userResponse = userService.updateUser(authUser,userid,userPatchRequest);
+    UserResponse userResponse = userService.updateUser(authUser, userid, userPatchRequest);
     return ResponseEntity.status(HttpStatus.OK).body(null);
+  }
+
+  @DeleteMapping("/{userid}")
+  public ResponseEntity deleteUser(@Auth AuthUser authUser, @PathVariable Long userid) {
+    Long userId = userService.deleteUser(userid, authUser);
+    return ResponseEntity.status(HttpStatus.ACCEPTED).body(userId);
   }
 }

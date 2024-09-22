@@ -31,11 +31,15 @@ public class User {
   private String email;
   @Enumerated(EnumType.STRING)
   private UserRole role;
-  private int market_count;
+
+  @Column(name = "market_count")
+  private int marketCount;
   private String name;
   private String nickname;
-  @Column(columnDefinition = "TINYINT(1)")
-  private boolean is_deleted;
+
+  @Setter
+  @Column(name = "is_deleted",columnDefinition = "TINYINT(1)")
+  private boolean isDeleted;
 
   @Setter
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -43,6 +47,10 @@ public class User {
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private Map<String, Address> addresses = new HashMap<>();
+
+  public boolean getDeleted(){
+    return this.isDeleted;
+  }
 
   public User(String email, String name, UserRole role,
       String nickname) {
@@ -65,4 +73,5 @@ public class User {
   public void updateNickname(String address) {
     this.nickname = nickname;
   }
+
 }

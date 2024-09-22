@@ -20,6 +20,7 @@ public class UserService {
   public UserResponse getUser(Long userid) {
     User user = userRepository.findById(userid)
         .orElseThrow(() -> new IllegalArgumentException("등록된 유저가 없습니다."));
+    isDeleted(user);
     return new UserResponse(user);
   }
 
@@ -27,7 +28,7 @@ public class UserService {
       UserPatchRequest userPatchRequest) {
     User user = userRepository.findById(userid)
         .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 유저입니다."));
-
+    isDeleted(user);
     if (!authUser.getId().equals(userid)) {
       throw new IllegalArgumentException("권한이 없습니다.");
     }
@@ -46,4 +47,23 @@ public class UserService {
     User saveUser = userRepository.save(user);
     return new UserResponse(user);
   }
+
+  public Long deleteUser(Long userid, AuthUser authUser) {
+    User user = userRepository.findById(userid)
+        .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 유저입니다."));
+    if (!user.getId().equals(authUser.getId())) {
+      throw new IllegalArgumentException("권한이 없습니다.");
+    }
+    isDeleted(user);
+    user.setDeleted(true);
+    User saveUser = userRepository.save(user);
+    return saveUser.getId();
+  }
+
+  public void isDeleted(User user) {
+    if (user.getDeleted() != false) {
+      throw new IllegalArgumentException("삭제된 유저입니다.");
+    }
+  }
+
 }

@@ -2,6 +2,8 @@ package com.sparta.eatsapp.order.entity;
 
 import com.sparta.eatsapp.common.Timestamped;
 import com.sparta.eatsapp.order.dto.OrderRequestDto;
+import com.sparta.eatsapp.restaurant.entity.Restaurant;
+import com.sparta.eatsapp.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,8 +19,8 @@ public class Order extends Timestamped {
     @Column(name = "orderId")
     private Long orderId;
 
-    @Column(name = "restaurantId", nullable = false, length = 20)
-    private Long restaurantId;
+//    @Column(name = "restaurantId", nullable = false, length = 20)
+//    private Long restaurantId;
 
     @Column(name = "menuName", nullable = false, length = 20)
     private String menuName;
@@ -38,17 +40,26 @@ public class Order extends Timestamped {
     @Column(name = "totalPrice", nullable = false, length = 10)
     private int totalPrice;
 
+    @Enumerated(value = EnumType.STRING)
     @Column(name = "orderStatus", nullable = false, length = 15)
-    OrderStatus orderStatus;
+    private OrderStatus orderStatus;
 
-    // Menu menu
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId")
+    private User user;
 
-    // market market
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "menuId")
+    private Menu menu;
 
-    // User user
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "restaurantId")
+    private Restaurant restaurant;
 
-    public Order(OrderRequestDto requestDto) {
-        this.restaurantId = requestDto.getRestaurantId();
+
+
+    public Order(OrderRequestDto requestDto, Restaurant restaurant) {
+        this.restaurant = restaurant;
         this.menuName = requestDto.getMenuName();
         this.price = requestDto.getPrice();
         this.number = requestDto.getNumber();

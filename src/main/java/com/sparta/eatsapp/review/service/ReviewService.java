@@ -22,6 +22,12 @@ public class ReviewService {
     private final OrderService orderService;
 
     public ReviewResponseDto save(ReviewRequestDto requestDto) {
+
+        // 주문 건에 대한 리뷰 작성 여부 확인
+        if(reviewRepository.findByOrderId(requestDto.getOrderId()).isPresent()) {
+            throw new IllegalArgumentException("리뷰를 이미 작성하셨습니다.");
+        }
+
         Order order = findByOrderId(requestDto.getOrderId());
 
         if(!order.getOrderStatus().equals(OrderStatus.FINISH)) {
@@ -34,20 +40,20 @@ public class ReviewService {
         return new ReviewResponseDto(savedReview, order);
     }
 
-    public List<ReviewResponseDto> getReviews(Long marketId, ReviewRequestDto requestDto) {
-        int minValue;
-        int maxValue;
+    public List<ReviewResponseDto> getReviews(Long restaurantId, ReviewRequestDto requestDto) {
+        int minValue = requestDto.getMin();
+        int maxValue = requestDto.getMax();
 
         // 조회 할 리뷰의 별점 최소값
-        if(requestDto.getMin() == 0)
+        if(minValue <= 0 || minValue > 5)
             minValue = 1;
 
         // 조회 할 리뷰의 별점 최대값
-        if(requestDto.getMax() == 0)
-            minValue = 5;
+        if(maxValue <= 0 || maxValue > 5)
+            maxValue = 5;
 
         // 매장의 별점 최솟값, 최댓값 기준으로 최신순으로 정렬
-        List<Review> reviews = reviewRepository.findAllByRestaurantIdAndStarBetweenOrderByCreatedAtDesc(marketId, requestDto.getMin(), requestDto.getMax());
+        List<Review> reviews = reviewRepository.findAllByRestaurantIdAndStarBetweenOrderByCreatedAtDesc(restaurantId, minValue, maxValue);
 
         List<ReviewResponseDto> reviewLists = new ArrayList<>();
         for(Review reviewList : reviews){

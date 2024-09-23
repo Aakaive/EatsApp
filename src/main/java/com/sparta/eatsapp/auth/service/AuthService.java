@@ -2,8 +2,10 @@ package com.sparta.eatsapp.auth.service;
 
 import com.sparta.eatsapp.address.entity.Address;
 import com.sparta.eatsapp.address.repository.AddressRepository;
+import com.sparta.eatsapp.auth.dto.request.SigninRequest;
 import com.sparta.eatsapp.auth.dto.request.SignupRequest;
 import com.sparta.eatsapp.auth.dto.response.SignupResponse;
+import com.sparta.eatsapp.config.JwtUtil;
 import com.sparta.eatsapp.config.PasswordEncoder;
 import com.sparta.eatsapp.password.entity.Password;
 import com.sparta.eatsapp.password.repository.PasswordRepository;
@@ -22,13 +24,17 @@ public class AuthService {
   private final PasswordEncoder passwordEncoder;
   private final PasswordRepository passwordRepository;
   private final AddressRepository addressRepository;
+  private final JwtUtil jwtUtil;
 
   @Transactional
   public SignupResponse signup(SignupRequest signupRequest) {
-
-    String encryptedPassword = passwordEncoder.encode(signupRequest.getPwd());
+    if(!userRepository.findByEmail(signupRequest.getEmail()).isEmpty()){
+      throw new IllegalArgumentException("이미 등록된 이메일 입니다.");
+    }
+    String encryptedPassword = passwordEncoder.encode(signupRequest.getPassword());
     Password password = new Password(encryptedPassword);
-    Address address = new Address(signupRequest.getAddress());
+    Address address = new Address(signupRequest.getAddress(),signupRequest.getLocation());
+
     User user = new User(
         signupRequest.getEmail(),
         signupRequest.getName(),
@@ -37,11 +43,24 @@ public class AuthService {
     );
     user.addAddresses(address);
     user.setPassword(password);
-
+    password.setUser(user);
     passwordRepository.save(password);
     addressRepository.save(address);
     User savedUser = userRepository.save(user);
 
     return new SignupResponse(savedUser);
+  }
+
+  public String signin(SigninRequest signinRequest) {
+    User user = userRepository.findByEmail(signinRequest.getEmail())
+        .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 이메일입니다."));
+    if (user.getDeleted()) {
+      throw new IllegalArgumentException("삭제된 유저입니다.");
+    }
+    if (!passwordEncoder.matches(signinRequest.getPassword(), user.getPassword().getPassword())) {
+      throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
+    };
+
+    return jwtUtil.createToken(user.getId(), user.getEmail(), user.getRole());
   }
 }

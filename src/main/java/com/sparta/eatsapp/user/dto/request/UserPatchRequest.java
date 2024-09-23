@@ -7,6 +7,7 @@ import lombok.Getter;
 @Builder
 public class UserPatchRequest {
 
+  private String password;
   private String nickname;
   private String location;
   private String address;

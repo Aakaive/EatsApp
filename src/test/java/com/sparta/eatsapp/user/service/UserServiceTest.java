@@ -64,21 +64,22 @@ public class UserServiceTest {
         .build();
 
     given(userRepository.findById(anyLong())).willReturn(Optional.ofNullable(testUser));
+    given(userRepository.save(any())).willReturn(testUser);
     //when
     UserResponse userResponse = userService.updateUser(testAuth, userId, userPatchRequest);
     //then
     assertNotNull(userResponse);
-    assertEquals(userPatchRequest.getNickname(),userResponse.getNickname());
+    assertEquals(userPatchRequest.getNickname(), userResponse.getNickname());
   }
 
   @Test
-  public void 유저_삭제_성공(){
+  public void 유저_삭제_성공() {
     //given
     Long userId = 1L;
     given(userRepository.findById(anyLong())).willReturn(Optional.of(testUser));
     given(userRepository.save(any())).willReturn(testUser);
     //when
-    Long deletedUserId = userService.deleteUser(userId,testAuth);
+    Long deletedUserId = userService.deleteUser(userId, testAuth);
     //then
     assertTrue(testUser.getDeleted());
   }

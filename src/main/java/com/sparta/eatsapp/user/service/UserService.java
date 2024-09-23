@@ -32,18 +32,25 @@ public class UserService {
     if (!authUser.getId().equals(userid)) {
       throw new IllegalArgumentException("권한이 없습니다.");
     }
-
-    if (!user.getAddresses().containsKey(userPatchRequest.getLocation())) {
-      Address address = new Address(userPatchRequest.getAddress(), userPatchRequest.getLocation());
-      addressRepository.save(address);
-      user.addAddresses(address);
-      user.updateNickname(userPatchRequest.getNickname());
-
-      User saveUser = userRepository.save(user);
-      return new UserResponse(user);
+    if ((userPatchRequest.getAddress() == null && userPatchRequest.getLocation() != null) ||
+        (userPatchRequest.getAddress() != null && userPatchRequest.getLocation() == null)) {
+      throw new IllegalArgumentException("위치와 주소는 둘다 입력해야 합니다.");
     }
-    user.update(userPatchRequest.getAddress(), userPatchRequest.getNickname(),
-        userPatchRequest.getLocation());
+
+    if (userPatchRequest.getLocation() != null && userPatchRequest.getAddress() != null) {
+      if (!user.getAddresses().containsKey(userPatchRequest.getLocation())) {
+        Address address = new Address(userPatchRequest.getAddress(),
+            userPatchRequest.getLocation());
+        addressRepository.save(address);
+        user.addAddresses(address);
+
+      }
+      user.updateAddress(userPatchRequest.getAddress(), userPatchRequest.getLocation());
+    }
+    if (userPatchRequest.getNickname() != null) {
+      user.updateNickname(userPatchRequest.getNickname());
+    }
+
     User saveUser = userRepository.save(user);
     return new UserResponse(saveUser);
   }
@@ -61,7 +68,7 @@ public class UserService {
   }
 
   public void isDeleted(User user) {
-    if (user.getDeleted() != false) {
+    if (user.getDeleted()) {
       throw new IllegalArgumentException("삭제된 유저입니다.");
     }
   }

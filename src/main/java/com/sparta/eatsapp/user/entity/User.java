@@ -38,7 +38,7 @@ public class User {
   private String nickname;
 
   @Setter
-  @Column(name = "is_deleted",columnDefinition = "TINYINT(1)")
+  @Column(name = "is_deleted", columnDefinition = "TINYINT(1)")
   private boolean isDeleted;
 
   @Setter
@@ -48,7 +48,7 @@ public class User {
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private Map<String, Address> addresses = new HashMap<>();
 
-  public boolean getDeleted(){
+  public boolean getDeleted() {
     return this.isDeleted;
   }
 
@@ -65,13 +65,12 @@ public class User {
     address.setUser(this);
   }
 
-  public void update(String address, String nickname, String location) {
-    this.nickname = nickname;
-    this.getAddresses().get(location).setAddress(address);
-  }
-
   public void updateNickname(String nickname) {
     this.nickname = nickname;
   }
 
+  public void updateAddress(String address, String location) {
+    this.nickname = nickname;
+    this.getAddresses().get(location).setAddress(address);
+  }
 }

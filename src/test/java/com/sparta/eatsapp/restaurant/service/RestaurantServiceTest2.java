@@ -94,4 +94,32 @@ class RestaurantServiceTest2 {
         });
         assertEquals("The maximum number of restaurants that can be registered has been exceeded.", exception.getMessage());
     }
+
+    @Test
+    void testUpdateRestaurant() {
+        // given
+        when(userRepository.findById(auth.getId())).thenReturn(Optional.of(user));
+
+        List<Restaurant> restaurants = new ArrayList<>();
+        Restaurant restaurant = new Restaurant();
+        restaurant.setOwner(user);
+        restaurant.setStatus(true);
+        restaurant.setRestaurantName("New Restaurant");
+        restaurants.add(restaurant);
+
+        when(restaurantRepository.findAllByOwner(user)).thenReturn(restaurants);
+
+        when(restaurantRepository.findById(1L)).thenReturn(Optional.of(restaurant));
+
+        RestaurantRequestDto updateRequestDto = new RestaurantRequestDto();
+        updateRequestDto.setRestaurantName("modified name");
+
+        when(restaurantRepository.save(any(Restaurant.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // when
+        RestaurantResponseDto updateResponseDto = restaurantService.updateRestaurant(auth, updateRequestDto, 1L);
+        assertNotNull(updateResponseDto);
+        assertEquals("modified name", updateResponseDto.getRestaurantName());
+        verify(restaurantRepository).save(any(Restaurant.class));
+    }
 }

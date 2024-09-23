@@ -7,6 +7,8 @@ import com.sparta.eatsapp.restaurant.repository.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class RestaurantService {
@@ -44,5 +46,25 @@ public class RestaurantService {
 
         Restaurant updatedRestaurant = restaurantRepository.save(restaurant);
         return new RestaurantResponseDto(updatedRestaurant);
+    }
+
+    public Long deleteRestaurant(Long id) {
+        Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("Restaurant not found")
+        );
+        restaurant.setStatus(false);
+        restaurantRepository.save(restaurant);
+        return restaurant.getId();
+    }
+
+    public List<Restaurant> getAllRestaurants() {
+        return restaurantRepository.findAll();
+    }
+
+    public RestaurantResponseDto getRestaurantById(Long id) {
+        Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("Restaurant not found")
+        );
+        return new RestaurantResponseDto(restaurant);
     }
 }

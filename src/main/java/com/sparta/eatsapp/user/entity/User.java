@@ -13,8 +13,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,18 +31,26 @@ public class User {
   private String email;
   @Enumerated(EnumType.STRING)
   private UserRole role;
-  private int market_count;
+
+  @Column(name = "market_count")
+  private int marketCount;
   private String name;
   private String nickname;
-  @Column(columnDefinition = "TINYINT(1)")
-  private boolean is_deleted;
+
+  @Setter
+  @Column(name = "is_deleted",columnDefinition = "TINYINT(1)")
+  private boolean isDeleted;
 
   @Setter
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private Password password;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Address> addresses = new ArrayList<>();
+  private Map<String, Address> addresses = new HashMap<>();
+
+  public boolean getDeleted(){
+    return this.isDeleted;
+  }
 
   public User(String email, String name, UserRole role,
       String nickname) {
@@ -53,7 +61,17 @@ public class User {
   }
 
   public void addAddresses(Address address) {
-    this.addresses.add(address);
+    this.addresses.put(address.getLocation(), address);
     address.setUser(this);
   }
+
+  public void update(String address, String nickname, String location) {
+    this.nickname = nickname;
+    this.getAddresses().get(location).setAddress(address);
+  }
+
+  public void updateNickname(String address) {
+    this.nickname = nickname;
+  }
+
 }

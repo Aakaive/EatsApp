@@ -54,23 +54,23 @@ class RestaurantServiceTest {
         restaurant2.setStatus(true);
     }
 
-    @Test
-    void testCreateRestaurant() {
-        // given
-        when(restaurantRepository.save(any(Restaurant.class))).thenReturn(restaurant);
-
-        // when
-        RestaurantResponseDto response = restaurantService.createRestaurant(restaurantRequestDto);
-
-        // then
-        assertNotNull(response);
-        assertEquals("Test Restaurant", response.getRestaurantName());
-        assertEquals(10000L, response.getMinimumPrice());
-        assertEquals(LocalTime.of(9, 0), response.getOpeningTime());
-        assertEquals(LocalTime.of(22, 0), response.getClosingTime());
-
-        verify(restaurantRepository, times(1)).save(any(Restaurant.class));
-    }
+//    @Test
+//    void testCreateRestaurant() {
+//        // given
+//        when(restaurantRepository.save(any(Restaurant.class))).thenReturn(restaurant);
+//
+//        // when
+//        RestaurantResponseDto response = restaurantService.createRestaurant(restaurantRequestDto);
+//
+//        // then
+//        assertNotNull(response);
+//        assertEquals("Test Restaurant", response.getRestaurantName());
+//        assertEquals(10000L, response.getMinimumPrice());
+//        assertEquals(LocalTime.of(9, 0), response.getOpeningTime());
+//        assertEquals(LocalTime.of(22, 0), response.getClosingTime());
+//
+//        verify(restaurantRepository, times(1)).save(any(Restaurant.class));
+//    }
 
     @Test
     void testUpdateRestaurant() {

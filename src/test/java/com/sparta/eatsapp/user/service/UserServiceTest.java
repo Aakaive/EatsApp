@@ -5,6 +5,8 @@ import static com.sparta.eatsapp.TestData.testPassword;
 import static com.sparta.eatsapp.TestData.testUser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
@@ -67,6 +69,18 @@ public class UserServiceTest {
     //then
     assertNotNull(userResponse);
     assertEquals(userPatchRequest.getNickname(),userResponse.getNickname());
+  }
+
+  @Test
+  public void 유저_삭제_성공(){
+    //given
+    Long userId = 1L;
+    given(userRepository.findById(anyLong())).willReturn(Optional.of(testUser));
+    given(userRepository.save(any())).willReturn(testUser);
+    //when
+    Long deletedUserId = userService.deleteUser(userId,testAuth);
+    //then
+    assertTrue(testUser.getDeleted());
   }
 
 }

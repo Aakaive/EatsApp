@@ -7,6 +7,7 @@ import com.sparta.eatsapp.restaurant.dto.RestaurantResponseDto;
 import com.sparta.eatsapp.restaurant.entity.Restaurant;
 import com.sparta.eatsapp.restaurant.repository.RestaurantRepository;
 import com.sparta.eatsapp.user.entity.User;
+import com.sparta.eatsapp.user.enums.UserRole;
 import com.sparta.eatsapp.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -44,10 +45,22 @@ public class RestaurantService {
         return new RestaurantResponseDto(savedRestaurant);
     }
 
-    public RestaurantResponseDto updateRestaurant(RestaurantRequestDto requestDto, Long id) {
+    public RestaurantResponseDto updateRestaurant(AuthUser auth, RestaurantRequestDto requestDto, Long id) {
+        User user = userRepository.findById(auth.getId()).orElseThrow(
+                () -> new IllegalArgumentException("User not found")
+        );
+
+        if(!user.getRole().equals(UserRole.OWNER)){
+            throw new IllegalArgumentException("You are not the owner");
+        }
+
         Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("Restaurant not found")
         );
+
+        if(!restaurant.getOwner().equals(user)){
+            throw new IllegalArgumentException("You are not the owner of this restaurant");
+        }
 
         if (requestDto.getRestaurantName() != null) {
             restaurant.setRestaurantName(requestDto.getRestaurantName());

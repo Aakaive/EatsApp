@@ -28,8 +28,8 @@ public class RestaurantController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<RestaurantResponseDto> updateRestaurant(@RequestBody RestaurantRequestDto requestDto, @PathVariable Long id) {
-        RestaurantResponseDto responseDto = restaurantService.updateRestaurant(requestDto, id);
+    public ResponseEntity<RestaurantResponseDto> updateRestaurant(@Auth AuthUser auth, @RequestBody RestaurantRequestDto requestDto, @PathVariable Long id) {
+        RestaurantResponseDto responseDto = restaurantService.updateRestaurant(auth, requestDto, id);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 

@@ -18,9 +18,22 @@ public class MenuController {
     private final MenuService menuService;
 
     @PostMapping("/{id}")
-    public ResponseEntity<MenuResponseDto> createMenu(@Auth AuthUser auth, @RequestBody MenuRequestDto menuRequestDto, @PathVariable Long restaurnatId) {
-        MenuResponseDto menuResponseDto = menuService.createMenu(auth, menuRequestDto, restaurnatId);
+    public ResponseEntity<MenuResponseDto> createMenu(@Auth AuthUser auth, @RequestBody MenuRequestDto menuRequestDto, @PathVariable Long restaurantId) {
+        MenuResponseDto menuResponseDto = menuService.createMenu(auth, menuRequestDto, restaurantId);
 
         return new ResponseEntity<>(menuResponseDto, HttpStatus.CREATED);
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<MenuResponseDto> updateMenu(@Auth AuthUser auth, @RequestBody MenuRequestDto menuRequestDto, @PathVariable Long restaurantId) {
+
+        return null;
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Long> deleteMenu(@Auth AuthUser auth, @PathVariable Long restaurnatId) {
+        return null;
+    }
+
+    // 겟 두개
 }

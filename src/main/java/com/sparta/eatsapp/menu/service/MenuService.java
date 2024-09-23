@@ -27,6 +27,7 @@ public class MenuService {
         Menu menu = new Menu();
         menu.setName(menuRequestDto.getMenuName());
         menu.setPrice(menuRequestDto.getPrice());
+        menu.setCategory(menuRequestDto.getCategory());
         menu.setRestaurant(findMyRestaurant(user, restaurantId));
 
         Menu savedMenu = menuRepository.save(menu);

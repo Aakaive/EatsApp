@@ -3,6 +3,7 @@ package com.sparta.eatsapp.menu.service;
 import com.sparta.eatsapp.auth.dto.AuthUser;
 import com.sparta.eatsapp.menu.dto.MenuRequestDto;
 import com.sparta.eatsapp.menu.dto.MenuResponseDto;
+import com.sparta.eatsapp.menu.entity.Category;
 import com.sparta.eatsapp.menu.entity.Menu;
 import com.sparta.eatsapp.menu.repository.MenuRepository;
 import com.sparta.eatsapp.password.entity.Password;
@@ -74,7 +75,7 @@ public class MenuServiceTest {
         restaurants.add(restaurant1);
         restaurants.add(restaurant2);
 
-        requestDto = new MenuRequestDto("마파두부", 12000L);
+        requestDto = new MenuRequestDto("마파두부", 12000L, Category.Chinese);
     }
 
     @Test
@@ -92,6 +93,7 @@ public class MenuServiceTest {
         // then
         assertNotNull(menuResponseDto);
         assertEquals("마파두부", menuResponseDto.getMenuName());
+        assertEquals(Category.Chinese, menuResponseDto.getCategory());
         verify(menuRepository).save(any(Menu.class));
     }
 }

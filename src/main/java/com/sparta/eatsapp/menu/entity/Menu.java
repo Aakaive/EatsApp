@@ -19,6 +19,10 @@ public class Menu {
     @Column(nullable = false)
     private Long price;
 
+    @Enumerated(EnumType.STRING)
+    private Category category;
+
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "restaurant_name", nullable = false)
     private Restaurant restaurant;

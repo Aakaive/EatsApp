@@ -1,6 +1,7 @@
 package com.sparta.eatsapp.restaurant.service;
 
 import com.sparta.eatsapp.auth.dto.AuthUser;
+import com.sparta.eatsapp.common.annotation.Auth;
 import com.sparta.eatsapp.config.AuthUserArgumentResolver;
 import com.sparta.eatsapp.restaurant.dto.RestaurantRequestDto;
 import com.sparta.eatsapp.restaurant.dto.RestaurantResponseDto;
@@ -50,17 +51,7 @@ public class RestaurantService {
                 () -> new IllegalArgumentException("User not found")
         );
 
-        if(!user.getRole().equals(UserRole.OWNER)){
-            throw new IllegalArgumentException("You are not the owner");
-        }
-
-        Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("Restaurant not found")
-        );
-
-        if(!restaurant.getOwner().equals(user)){
-            throw new IllegalArgumentException("You are not the owner of this restaurant");
-        }
+        Restaurant restaurant = findMyRestaurant(auth, id);
 
         if (requestDto.getRestaurantName() != null) {
             restaurant.setRestaurantName(requestDto.getRestaurantName());
@@ -79,13 +70,29 @@ public class RestaurantService {
         return new RestaurantResponseDto(updatedRestaurant);
     }
 
-    public Long deleteRestaurant(Long id) {
-        Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("Restaurant not found")
-        );
+    public Long deleteRestaurant(AuthUser auth, Long id) {
+        Restaurant restaurant = findMyRestaurant(auth, id);
         restaurant.setStatus(false);
         restaurantRepository.save(restaurant);
         return restaurant.getId();
+    }
+
+    public Restaurant findMyRestaurant(AuthUser auth, Long id) {
+        User user = userRepository.findById(auth.getId()).orElseThrow(
+                () -> new IllegalArgumentException("User not found")
+        );
+        if(!user.getRole().equals(UserRole.OWNER)){
+            new IllegalArgumentException("You are not the owner");
+        }
+        Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("Restaurant not found")
+        );
+
+        if(!restaurant.getOwner().equals(user)){
+            new IllegalArgumentException("You are not the owner of this restaurant");
+        }
+
+        return restaurant;
     }
 
     public List<Restaurant> getAllRestaurants() {

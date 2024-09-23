@@ -11,8 +11,7 @@ import java.time.LocalDateTime;
 public class OrderResponseDto {
 
     private Long orderId;
-    private String customerName;
-    //String marketName;
+    private String userName;
     private String restaurant;
     private String menuName;
     private int price;
@@ -25,7 +24,7 @@ public class OrderResponseDto {
 
     public OrderResponseDto(Order order) {
         this.orderId = order.getOrderId();
-        //this.customerName = customerName;
+        this.userName = order.getUser().getName();
         this.restaurant = order.getRestaurant().getRestaurantName();
         this.menuName = order.getMenuName();
         this.price = order.getPrice();

@@ -58,8 +58,9 @@ public class Order extends Timestamped {
 
 
 
-    public Order(OrderRequestDto requestDto, Restaurant restaurant) {
+    public Order(OrderRequestDto requestDto, Restaurant restaurant, User user) {
         this.restaurant = restaurant;
+        this.user = user;
         this.menuName = requestDto.getMenuName();
         this.price = requestDto.getPrice();
         this.number = requestDto.getNumber();
@@ -71,5 +72,15 @@ public class Order extends Timestamped {
 
     public void cancelOrder() {
         this.orderStatus = OrderStatus.CANCEL;
+    }
+
+    public void nextStatus() {
+        if(this.orderStatus == OrderStatus.REQUEST) {
+            this.orderStatus = OrderStatus.COOKING;
+        } else if(this.orderStatus == OrderStatus.COOKING) {
+            this.orderStatus = OrderStatus.DELIVERING;
+        } else {
+            this.orderStatus = OrderStatus.FINISH;
+        }
     }
 }

@@ -17,7 +17,7 @@ public class MenuController {
 
     private final MenuService menuService;
 
-    @PostMapping("/{id}")
+    @PostMapping("/{restaurantId}")
     public ResponseEntity<MenuResponseDto> createMenu(@Auth AuthUser auth, @RequestBody MenuRequestDto menuRequestDto, @PathVariable Long restaurantId) {
         MenuResponseDto menuResponseDto = menuService.createMenu(auth, menuRequestDto, restaurantId);
 

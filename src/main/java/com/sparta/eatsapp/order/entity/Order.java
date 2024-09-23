@@ -1,8 +1,10 @@
 package com.sparta.eatsapp.order.entity;
 
 import com.sparta.eatsapp.common.Timestamped;
+import com.sparta.eatsapp.menu.entity.Menu;
 import com.sparta.eatsapp.order.dto.OrderRequestDto;
 import com.sparta.eatsapp.restaurant.entity.Restaurant;
+import com.sparta.eatsapp.review.entity.Review;
 import com.sparta.eatsapp.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -18,15 +20,6 @@ public class Order extends Timestamped {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "orderId")
     private Long orderId;
-
-//    @Column(name = "restaurantId", nullable = false, length = 20)
-//    private Long restaurantId;
-
-    @Column(name = "menuName", nullable = false, length = 20)
-    private String menuName;
-
-    @Column(name = "price", nullable = false)
-    private int price;
 
     @Column(name = "number", nullable = false)
     private int number;
@@ -48,25 +41,26 @@ public class Order extends Timestamped {
     @JoinColumn(name = "userId")
     private User user;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "menuId")
-//    private Menu menu;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "menuId")
+    private Menu menu;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurantId")
     private Restaurant restaurant;
 
+    @OneToOne
+    @JoinColumn(name = "reviewId")
+    private Review review;
 
-
-    public Order(OrderRequestDto requestDto, Restaurant restaurant, User user) {
+    public Order(OrderRequestDto requestDto, Restaurant restaurant, User user, Menu menu) {
         this.restaurant = restaurant;
         this.user = user;
-        this.menuName = requestDto.getMenuName();
-        this.price = requestDto.getPrice();
+        this.menu = menu;
         this.number = requestDto.getNumber();
         this.customerRequest = requestDto.getCustomerRequest();
         this.deliveryFee = 2000;
-        this.totalPrice = this.deliveryFee + (this.price * this.number);
+        this.totalPrice = this.deliveryFee + (int)(this.menu.getPrice() * this.number);
         this.orderStatus = OrderStatus.REQUEST;
     }
 
@@ -82,5 +76,9 @@ public class Order extends Timestamped {
         } else {
             this.orderStatus = OrderStatus.FINISH;
         }
+    }
+
+    public void saveReview(Review review) {
+        this.review = review;
     }
 }

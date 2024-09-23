@@ -1,6 +1,7 @@
 package com.sparta.eatsapp.user.entity;
 
 import com.sparta.eatsapp.address.entity.Address;
+import com.sparta.eatsapp.order.entity.Order;
 import com.sparta.eatsapp.password.entity.Password;
 import com.sparta.eatsapp.user.enums.UserRole;
 import jakarta.persistence.CascadeType;
@@ -13,7 +14,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,6 +51,9 @@ public class User {
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private Map<String, Address> addresses = new HashMap<>();
+
+  @OneToMany(mappedBy = "user")
+  List<Order> orderList = new ArrayList<>();
 
   public boolean getDeleted(){
     return this.isDeleted;

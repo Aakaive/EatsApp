@@ -1,9 +1,13 @@
 package com.sparta.eatsapp.menu.entity;
 
+import com.sparta.eatsapp.order.entity.Order;
 import com.sparta.eatsapp.restaurant.entity.Restaurant;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -22,8 +26,10 @@ public class Menu {
     @Enumerated(EnumType.STRING)
     private Category category;
 
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "restaurant_name", nullable = false)
     private Restaurant restaurant;
+
+    @OneToMany(mappedBy = "menu")
+    List<Order> orderList = new ArrayList<>();
 }

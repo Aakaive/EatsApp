@@ -1,7 +1,11 @@
 package com.sparta.eatsapp.order.service;
 
 import com.sparta.eatsapp.auth.dto.AuthUser;
+import com.sparta.eatsapp.common.annotation.OrderStatusAop;
+import com.sparta.eatsapp.menu.entity.Menu;
+import com.sparta.eatsapp.menu.repository.MenuRepository;
 import com.sparta.eatsapp.order.dto.OrderRequestDto;
+
 import com.sparta.eatsapp.order.dto.OrderResponseDto;
 import com.sparta.eatsapp.order.dto.OrderStatusResponseDto;
 import com.sparta.eatsapp.order.entity.Order;
@@ -13,14 +17,15 @@ import com.sparta.eatsapp.user.entity.User;
 import com.sparta.eatsapp.user.enums.UserRole;
 import com.sparta.eatsapp.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.file.AccessDeniedException;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j(topic = "주문 로직 실행")
 @Service
 @RequiredArgsConstructor
 public class OrderService {
@@ -28,14 +33,20 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final RestaurantRepository restaurantRepository;
     private final UserRepository userRepository;
+    private final MenuRepository menuRepository;
 
     // 주문
     //@OrderStatusAop
     public OrderResponseDto order(OrderRequestDto requestDto, AuthUser authUser) {
-        Restaurant restaurant = restaurantRepository.findById(requestDto.getRestaurantId()).orElseThrow(() ->
-                new IllegalArgumentException("유효한 매장이 아닙니다."));
+        Restaurant restaurant = findByRestaurantId(requestDto.getRestaurantId());
+
+        if(restaurant.getOwner().getId().equals(authUser.getId())) {
+            throw new IllegalArgumentException("자신의 매장에 주문 할 수 없습니다.");
+        }
 
         User user = findByUserId(authUser.getId());
+        Menu menu = menuRepository.findById(requestDto.getMenuId()).orElseThrow(() ->
+                new IllegalArgumentException("유효한 메뉴가 아닙니다."));
 
         // 오픈 시간 확인
         if(!restaurant.getOpeningTime().isBefore(LocalTime.now())) {
@@ -48,11 +59,11 @@ public class OrderService {
         }
 
         // 최소 주문 가격 조건 확인
-        if(requestDto.getPrice() * requestDto.getNumber() < restaurant.getMinimumPrice()) {
+        if(menu.getPrice() * requestDto.getNumber() < restaurant.getMinimumPrice()) {
             throw new IllegalArgumentException("최소 주문 가격보다 적습니다.");
         }
 
-        Order order = new Order(requestDto, restaurant, user);
+        Order order = new Order(requestDto, restaurant, user, menu);
         Order RequestOrder = orderRepository.save(order);
 
         return new OrderResponseDto(RequestOrder);
@@ -77,11 +88,12 @@ public class OrderService {
             throw new IllegalArgumentException("사장만 조회가 가능합니다.");
         }
 
-        /*
+        Restaurant restaurant = findByRestaurantId(restaurantId);
 
-        로그인한 유저와 매장 주인이 일치하는지 확인하는 로직 필요
+        if(!restaurant.getOwner().getId().equals(authUser.getId())) {
+            throw new IllegalArgumentException("매장 소유주가 아닙니다.");
+        }
 
-         */
         List<Order> orderList = orderRepository.findAllByRestaurantId(restaurantId);
         List<OrderResponseDto> list = new ArrayList<>();
         for(Order orderLists : orderList) {
@@ -124,6 +136,10 @@ public class OrderService {
 
         Order order = findByOrderId(orderId);
 
+        if(!order.getRestaurant().getOwner().getId().equals(authUser.getId())) {
+            throw new IllegalArgumentException("매장 소유주가 아닙니다.");
+        }
+
         if(order.getOrderStatus() == OrderStatus.CANCEL) {
             throw new IllegalArgumentException("이미 취소된 주문입니다.");
         }
@@ -134,7 +150,9 @@ public class OrderService {
     }
 
     // 주문 상태 다음으로 변경
-    public OrderStatusResponseDto changeStatus(Long orderId, AuthUser authUser){
+    //@OrderStatusAop
+    @Transactional
+    public OrderStatusResponseDto  changeStatus(Long orderId, AuthUser authUser){
         Order order = findByOrderId(orderId);
         User user = findByUserId(authUser.getId());
 
@@ -153,6 +171,11 @@ public class OrderService {
         order.nextStatus();
 
         return new OrderStatusResponseDto(order);
+    }
+
+    public Restaurant findByRestaurantId(Long restaurantId) {
+        return restaurantRepository.findById(restaurantId).orElseThrow(() ->
+                new IllegalArgumentException("유효한 매장이 아닙니다."));
     }
 
     public User findByUserId(Long userId) {

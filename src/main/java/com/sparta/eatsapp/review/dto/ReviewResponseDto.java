@@ -1,6 +1,5 @@
 package com.sparta.eatsapp.review.dto;
 
-import com.sparta.eatsapp.order.entity.Order;
 import com.sparta.eatsapp.review.entity.Review;
 import lombok.Getter;
 
@@ -14,8 +13,9 @@ public class ReviewResponseDto {
     private String content;
     private LocalDateTime createdAt;
 
-    public ReviewResponseDto(Review review, Order order) {
-        this.menuName = order.getMenuName();
+    public  ReviewResponseDto(Review review) {
+        this.userName = review.getOrder().getUser().getName();
+        this.menuName = review.getOrder().getMenu().getName();
         this.star = review.getStar();
         this.content = review.getContent();
         this.createdAt = review.getCreatedAt();

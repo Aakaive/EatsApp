@@ -12,6 +12,7 @@ public class OrderStatusResponseDto {
     private OrderStatus orderStatus;
 
     public OrderStatusResponseDto(Order order) {
+        this.orderId = order.getOrderId();
         this.orderStatus = order.getOrderStatus();
     }
 }

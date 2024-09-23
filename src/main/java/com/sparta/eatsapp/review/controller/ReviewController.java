@@ -26,7 +26,13 @@ public class ReviewController {
 
     // 해당 매장의 모든 리뷰 조회
     @GetMapping("/restaurant/{restaurantId}/reviews")
-    public ResponseEntity<List<ReviewResponseDto>> getReivews(@PathVariable Long restaurantId) {
-        return ResponseEntity.ok(reviewService.getReviews(restaurantId));
+    public ResponseEntity<List<ReviewResponseDto>> getReviews(@PathVariable Long restaurantId, @RequestBody ReviewRequestDto requestDto) {
+        return ResponseEntity.ok(reviewService.getReviews(restaurantId, requestDto));
+    }
+
+    // 리뷰 수정
+    @PutMapping("/review/{reviewId}")
+    public ResponseEntity<ReviewResponseDto> modifiedReview(@PathVariable Long reviewId, @RequestBody ReviewRequestDto requestDto) {
+        return ResponseEntity.ok(reviewService.modifiedReview(reviewId, requestDto));
     }
 }

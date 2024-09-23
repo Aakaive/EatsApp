@@ -96,7 +96,8 @@ public class RestaurantService {
     }
 
     public List<Restaurant> getAllRestaurants() {
-        return restaurantRepository.findAll();
+        List<Restaurant> restaurants = restaurantRepository.findAll();
+        return restaurants.stream().filter(Restaurant::isStatus).toList();
     }
 
     public RestaurantResponseDto getRestaurantById(Long id) {

@@ -138,4 +138,6 @@ class RestaurantServiceTest2 {
         assertFalse(restaurant.isStatus());
         verify(restaurantRepository).save(restaurant);
     }
+
+
 }

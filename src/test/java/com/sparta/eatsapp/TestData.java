@@ -1,5 +1,6 @@
 package com.sparta.eatsapp;
 
+import com.sparta.eatsapp.auth.dto.AuthUser;
 import com.sparta.eatsapp.auth.dto.request.SigninRequest;
 import com.sparta.eatsapp.auth.dto.request.SignupRequest;
 import com.sparta.eatsapp.password.entity.Password;
@@ -29,4 +30,6 @@ public class TestData {
       .email("dnwls111@naver.com")
       .password("dnwls111")
       .build();
+
+  public static AuthUser testAuth = new AuthUser(1L,"dnwls111@naver.com");
 }

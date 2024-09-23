@@ -45,7 +45,7 @@ public class UserService {
     user.update(userPatchRequest.getAddress(), userPatchRequest.getNickname(),
         userPatchRequest.getLocation());
     User saveUser = userRepository.save(user);
-    return new UserResponse(user);
+    return new UserResponse(saveUser);
   }
 
   public Long deleteUser(Long userid, AuthUser authUser) {

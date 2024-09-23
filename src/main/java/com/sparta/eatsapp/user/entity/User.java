@@ -70,7 +70,7 @@ public class User {
     this.getAddresses().get(location).setAddress(address);
   }
 
-  public void updateNickname(String address) {
+  public void updateNickname(String nickname) {
     this.nickname = nickname;
   }
 

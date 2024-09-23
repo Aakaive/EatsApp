@@ -139,5 +139,29 @@ class RestaurantServiceTest2 {
         verify(restaurantRepository).save(restaurant);
     }
 
+    @Test
+    void testGetAllRestaurants() {
+        List<Restaurant> restaurants = new ArrayList<>();
 
+        Restaurant restaurant1 = new Restaurant();
+        restaurant1.setStatus(true);
+        Restaurant restaurant2 = new Restaurant();
+        restaurant2.setStatus(false);
+        Restaurant restaurant3 = new Restaurant();
+        restaurant3.setStatus(true);
+
+        restaurants.add(restaurant1);
+        restaurants.add(restaurant2);
+        restaurants.add(restaurant3);
+
+        when(restaurantRepository.findAll()).thenReturn(restaurants);
+
+        List<Restaurant> activeRestaurants = restaurantService.getAllRestaurants();
+
+        assertNotNull(activeRestaurants);
+        assertEquals(2, activeRestaurants.size());
+        assertTrue(activeRestaurants.contains(restaurant1));
+        assertFalse(activeRestaurants.contains(restaurant2));
+        assertTrue(activeRestaurants.contains(restaurant3));
+    }
 }

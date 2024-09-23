@@ -60,4 +60,11 @@ public class RestaurantService {
     public List<Restaurant> getAllRestaurants() {
         return restaurantRepository.findAll();
     }
+
+    public RestaurantResponseDto getRestaurantById(Long id) {
+        Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("Restaurant not found")
+        );
+        return new RestaurantResponseDto(restaurant);
+    }
 }

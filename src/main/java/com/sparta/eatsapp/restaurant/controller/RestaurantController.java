@@ -50,4 +50,10 @@ public class RestaurantController {
         return ResponseEntity.ok(responseDtos);
 
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<RestaurantResponseDto> getRestaurantById(@PathVariable Long id) {
+        RestaurantResponseDto responseDto = restaurantService.getRestaurantById(id);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
 }

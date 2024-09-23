@@ -132,4 +132,12 @@ class RestaurantServiceTest {
         verify(restaurantRepository, times(1)).findAll();
     }
 
+    @Test
+    void testGetRestaurantById() {
+        long id = restaurant.getId();
+        when(restaurantRepository.findById(id)).thenReturn(java.util.Optional.of(restaurant));
+        RestaurantResponseDto response = restaurantService.getRestaurantById(id);
+        assertNotNull(response);
+        assertEquals("Test Restaurant", response.getRestaurantName());
+    }
 }

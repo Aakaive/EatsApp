@@ -1,6 +1,9 @@
 package com.sparta.eatsapp.restaurant.controller;
 
 
+import com.sparta.eatsapp.auth.dto.AuthUser;
+import com.sparta.eatsapp.common.annotation.Auth;
+import com.sparta.eatsapp.config.AuthUserArgumentResolver;
 import com.sparta.eatsapp.restaurant.dto.RestaurantRequestDto;
 import com.sparta.eatsapp.restaurant.dto.RestaurantResponseDto;
 import com.sparta.eatsapp.restaurant.entity.Restaurant;
@@ -19,8 +22,8 @@ public class RestaurantController {
     private final RestaurantService restaurantService;
 
     @PostMapping
-    public ResponseEntity<RestaurantResponseDto> createRestaurant(@RequestBody RestaurantRequestDto requestDto) {
-        RestaurantResponseDto responseDto = restaurantService.createRestaurant(requestDto);
+    public ResponseEntity<RestaurantResponseDto> createRestaurant(@Auth AuthUser auth, @RequestBody RestaurantRequestDto requestDto) {
+        RestaurantResponseDto responseDto = restaurantService.createRestaurant(auth, requestDto);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 

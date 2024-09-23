@@ -1,5 +1,6 @@
 package com.sparta.eatsapp.restaurant.entity;
 
+import com.sparta.eatsapp.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,8 +24,9 @@ public class Restaurant {
     @Column
     private Long minimumPrice;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private User user;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name="owner_id", nullable = false)
+    private User owner;
 
     @Column
     private LocalTime openingTime;

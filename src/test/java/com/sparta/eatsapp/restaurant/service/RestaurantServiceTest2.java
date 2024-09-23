@@ -35,6 +35,7 @@ class RestaurantServiceTest2 {
     @InjectMocks
     RestaurantService restaurantService;
 
+
     private AuthUser auth;
     private User user;
     private Password password;
@@ -46,7 +47,7 @@ class RestaurantServiceTest2 {
 
         auth = new AuthUser(1L, "aaa111@email.com");
 
-        Password password = new Password("qwer1234");
+        password = new Password("qwer1234");
 
         user = new User("aaa111@email.com", "Test Owner", UserRole.OWNER, "testNickname");
         user.setPassword(password);

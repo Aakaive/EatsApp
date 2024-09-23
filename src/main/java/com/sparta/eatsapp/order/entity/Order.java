@@ -48,9 +48,9 @@ public class Order extends Timestamped {
     @JoinColumn(name = "userId")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "menuId")
-    private Menu menu;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "menuId")
+//    private Menu menu;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurantId")

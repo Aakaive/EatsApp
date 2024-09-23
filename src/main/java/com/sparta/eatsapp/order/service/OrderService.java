@@ -1,6 +1,5 @@
 package com.sparta.eatsapp.order.service;
 
-import com.sparta.eatsapp.common.OrderStatusAop;
 import com.sparta.eatsapp.order.dto.OrderRequestDto;
 import com.sparta.eatsapp.order.dto.OrderResponseDto;
 import com.sparta.eatsapp.order.entity.Order;

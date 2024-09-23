@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OrderRequestDto {
     private Long restaurantId;
-    private String restaurantName;
     private String menuName;
     private int price;
     private String customerRequest;

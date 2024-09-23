@@ -20,6 +20,16 @@ public class MenuService {
     private final UserRepository userRepository;
     private final RestaurantRepository restaurantRepository;
 
+    public Restaurant findMyRestaurant(User owner, Long restaurantId) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(
+                () -> new IllegalArgumentException("restaurant not found")
+        );
+        if (!owner.equals(restaurant.getOwner())) {
+            throw new IllegalArgumentException("owner is not the owner of the restaurant");
+        }
+        return restaurant;
+    }
+
     public MenuResponseDto createMenu(AuthUser auth, MenuRequestDto menuRequestDto, Long restaurantId) {
         User user = userRepository.findById(auth.getId()).orElseThrow(
                 () -> new IllegalArgumentException("user not found")
@@ -35,13 +45,31 @@ public class MenuService {
         return new MenuResponseDto(savedMenu);
     }
 
-    public Restaurant findMyRestaurant(User owner, Long restaurantId) {
-        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(
-                () -> new IllegalArgumentException("restaurant not found")
+    public MenuResponseDto updateMenu(AuthUser auth, MenuRequestDto menuRequestDto, Long menuId) {
+        User user = userRepository.findById(auth.getId()).orElseThrow(
+                () -> new IllegalArgumentException("user not found")
         );
-        if(!owner.equals(restaurant.getOwner())) {
-            throw new IllegalArgumentException("owner is not the owner of the restaurant");
+
+        Menu menu = menuRepository.findById(menuId).orElseThrow(
+                () -> new IllegalArgumentException("menu not found")
+        );
+
+        if(!user.equals(menu.getRestaurant().getOwner())){
+            throw new IllegalArgumentException("owner is not the owner of the menu");
         }
-        return restaurant;
+
+        if(menu.getName() != null){
+            menu.setName(menuRequestDto.getMenuName());
+        }
+        if(menu.getPrice() != null){
+            menu.setPrice(menuRequestDto.getPrice());
+        }
+        if(menu.getCategory() != null){
+            menu.setCategory(menuRequestDto.getCategory());
+        }
+
+        Menu modifiedMenu = menuRepository.save(menu);
+
+        return new MenuResponseDto(modifiedMenu);
     }
 }

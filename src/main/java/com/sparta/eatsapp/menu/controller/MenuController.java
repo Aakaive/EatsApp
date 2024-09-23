@@ -25,9 +25,10 @@ public class MenuController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<MenuResponseDto> updateMenu(@Auth AuthUser auth, @RequestBody MenuRequestDto menuRequestDto, @PathVariable Long restaurantId) {
+    public ResponseEntity<MenuResponseDto> updateMenu(@Auth AuthUser auth, @RequestBody MenuRequestDto menuRequestDto, @PathVariable Long menuId) {
+        MenuResponseDto menuResponseDto = menuService.updateMenu(auth, menuRequestDto, menuId);
 
-        return null;
+        return new ResponseEntity<>(menuResponseDto, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

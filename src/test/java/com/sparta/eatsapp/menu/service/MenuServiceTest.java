@@ -96,4 +96,25 @@ public class MenuServiceTest {
         assertEquals(Category.Chinese, menuResponseDto.getCategory());
         verify(menuRepository).save(any(Menu.class));
     }
+
+    @Test
+    void testUpdateMenu() {
+        Long id = 1L;
+        Menu menu = new Menu();
+        menu.setId(id);
+        menu.setName("알리오올리오");
+        menu.setPrice(16000L);
+        menu.setCategory(Category.Western);
+        menu.setRestaurant(restaurants.get(0));
+
+        when(userRepository.findById(auth.getId())).thenReturn(Optional.of(user));
+        when(menuRepository.findById(id)).thenReturn(Optional.of(menu));
+        when(menuRepository.save(any(Menu.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        MenuResponseDto menuResponseDto = menuService.updateMenu(auth, requestDto, id);
+        assertNotNull(menuResponseDto);
+        assertNotEquals("알리오올리오", menuResponseDto.getMenuName());
+        assertEquals(Category.Chinese, menuResponseDto.getCategory());
+        verify(menuRepository).save(any(Menu.class));
+    }
 }

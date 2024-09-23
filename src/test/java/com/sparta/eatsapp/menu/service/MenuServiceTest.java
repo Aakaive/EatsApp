@@ -117,4 +117,21 @@ public class MenuServiceTest {
         assertEquals(Category.Chinese, menuResponseDto.getCategory());
         verify(menuRepository).save(any(Menu.class));
     }
+
+    @Test
+    void testDeleteMenu() {
+        Long id = 1L;
+        Menu menu = new Menu();
+        menu.setId(id);
+        menu.setActive(true);
+        menu.setRestaurant(restaurants.get(0));
+        when(userRepository.findById(auth.getId())).thenReturn(Optional.of(user));
+        when(menuRepository.findById(id)).thenReturn(Optional.of(menu));
+        when(menuRepository.save(any(Menu.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        menuService.deleteMenu(auth, id);
+        assertFalse(menu.isActive());
+        verify(menuRepository).save(any(Menu.class));
+
+    }
 }

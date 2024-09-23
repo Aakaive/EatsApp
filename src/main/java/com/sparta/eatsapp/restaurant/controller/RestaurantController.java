@@ -7,6 +7,7 @@ import com.sparta.eatsapp.config.AuthUserArgumentResolver;
 import com.sparta.eatsapp.restaurant.dto.RestaurantRequestDto;
 import com.sparta.eatsapp.restaurant.dto.RestaurantResponseDto;
 import com.sparta.eatsapp.restaurant.dto.RestaurantsResponseDto;
+import com.sparta.eatsapp.restaurant.dto.ViewRestaurantResponseDto;
 import com.sparta.eatsapp.restaurant.entity.Restaurant;
 import com.sparta.eatsapp.restaurant.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
@@ -56,8 +57,8 @@ public class RestaurantController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RestaurantResponseDto> getRestaurantById(@PathVariable Long id) {
-        RestaurantResponseDto responseDto = restaurantService.getRestaurantById(id);
+    public ResponseEntity<ViewRestaurantResponseDto> getRestaurantById(@PathVariable Long restaurantId) {
+        ViewRestaurantResponseDto responseDto = restaurantService.getRestaurantById(restaurantId);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 }

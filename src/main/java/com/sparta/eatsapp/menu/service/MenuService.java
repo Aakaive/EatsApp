@@ -97,4 +97,14 @@ public class MenuService {
 
         return menuId;
     }
+
+    public List<MenuResponseDtos> getAllMenus(Long restaurantId) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(
+                () -> new IllegalArgumentException("restaurant not found")
+        );
+        List<Menu> menus = menuRepository.findAllByRestaurant(restaurant);
+        List<MenuResponseDtos> menuResponseDtos = menus.stream().map(MenuResponseDtos::new).toList();
+
+        return menuResponseDtos;
+    }
 }

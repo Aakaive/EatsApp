@@ -54,7 +54,9 @@ public class AuthService {
   public String signin(SigninRequest signinRequest) {
     User user = userRepository.findByEmail(signinRequest.getEmail())
         .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 이메일입니다."));
-
+    if (user.getDeleted()) {
+      throw new IllegalArgumentException("삭제된 유저입니다.");
+    }
     if (!passwordEncoder.matches(signinRequest.getPassword(), user.getPassword().getPassword())) {
       throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
     };

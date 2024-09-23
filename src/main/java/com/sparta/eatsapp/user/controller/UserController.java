@@ -34,7 +34,7 @@ public class UserController {
       @RequestBody
       UserPatchRequest userPatchRequest) {
     UserResponse userResponse = userService.updateUser(authUser, userid, userPatchRequest);
-    return ResponseEntity.status(HttpStatus.OK).body(null);
+    return ResponseEntity.status(HttpStatus.OK).body(userResponse);
   }
 
   @DeleteMapping("/{userid}")

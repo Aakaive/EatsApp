@@ -122,4 +122,20 @@ class RestaurantServiceTest2 {
         assertEquals("modified name", updateResponseDto.getRestaurantName());
         verify(restaurantRepository).save(any(Restaurant.class));
     }
+
+    @Test
+    void testDeleteRestaurant() {
+        when(userRepository.findById(auth.getId())).thenReturn(Optional.of(user));
+        List<Restaurant> restaurants = new ArrayList<>();
+        Restaurant restaurant = new Restaurant();
+        restaurant.setOwner(user);
+        restaurant.setStatus(true);
+        restaurants.add(restaurant);
+        when(restaurantRepository.findById(1L)).thenReturn(Optional.of(restaurant));
+        when(restaurantRepository.findAllByOwner(user)).thenReturn(restaurants);
+
+        restaurantService.deleteRestaurant(auth, 1L);
+        assertFalse(restaurant.isStatus());
+        verify(restaurantRepository).save(restaurant);
+    }
 }

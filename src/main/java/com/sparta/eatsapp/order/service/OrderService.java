@@ -7,6 +7,7 @@ import com.sparta.eatsapp.menu.repository.MenuRepository;
 import com.sparta.eatsapp.order.dto.OrderRequestDto;
 
 import com.sparta.eatsapp.order.dto.OrderResponseDto;
+import com.sparta.eatsapp.order.dto.OrderStatusRequestDto;
 import com.sparta.eatsapp.order.dto.OrderStatusResponseDto;
 import com.sparta.eatsapp.order.entity.Order;
 import com.sparta.eatsapp.order.entity.OrderStatus;
@@ -36,7 +37,7 @@ public class OrderService {
     private final MenuRepository menuRepository;
 
     // 주문
-    //@OrderStatusAop
+    @OrderStatusAop
     public OrderResponseDto order(OrderRequestDto requestDto, AuthUser authUser) {
         Restaurant restaurant = findByRestaurantId(requestDto.getRestaurantId());
 
@@ -150,14 +151,18 @@ public class OrderService {
     }
 
     // 주문 상태 다음으로 변경
-    //@OrderStatusAop
+    @OrderStatusAop
     @Transactional
-    public OrderStatusResponseDto  changeStatus(Long orderId, AuthUser authUser){
-        Order order = findByOrderId(orderId);
+    public OrderStatusResponseDto  changeStatus(OrderStatusRequestDto requestDto, AuthUser authUser){
+        Order order = findByOrderId(requestDto.getOrderId());
         User user = findByUserId(authUser.getId());
 
         if(!user.getRole().equals(UserRole.OWNER)){
             throw new IllegalArgumentException("사장만 변경이 가능합니다.");
+        }
+
+        if(!order.getRestaurant().getOwner().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("본인 매장이 아닙니다.");
         }
 
         if(order.getOrderStatus() == OrderStatus.CANCEL) {

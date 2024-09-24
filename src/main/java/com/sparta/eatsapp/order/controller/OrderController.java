@@ -4,6 +4,7 @@ import com.sparta.eatsapp.auth.dto.AuthUser;
 import com.sparta.eatsapp.common.annotation.Auth;
 import com.sparta.eatsapp.order.dto.OrderRequestDto;
 import com.sparta.eatsapp.order.dto.OrderResponseDto;
+import com.sparta.eatsapp.order.dto.OrderStatusRequestDto;
 import com.sparta.eatsapp.order.dto.OrderStatusResponseDto;
 import com.sparta.eatsapp.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -52,8 +53,8 @@ public class OrderController {
     }
 
     // 주문 상태 변경
-    @PatchMapping("/orderStatus/{orderId}")
-    public ResponseEntity<OrderStatusResponseDto> changeStatus(@PathVariable Long orderId, @Auth AuthUser authUser) {
-        return ResponseEntity.ok(orderService.changeStatus(orderId, authUser));
+    @PatchMapping("/orderStatus")
+    public ResponseEntity<OrderStatusResponseDto> changeStatus(@RequestBody OrderStatusRequestDto requestDto, @Auth AuthUser authUser) {
+        return ResponseEntity.ok(orderService.changeStatus(requestDto, authUser));
     }
 }

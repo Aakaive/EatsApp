@@ -20,21 +20,21 @@ public class MenuController {
     private final MenuRepository menuRepository;
 
     @PostMapping("/{id}")
-    public ResponseEntity<MenuResponseDto> createMenu(@Auth AuthUser auth, @RequestBody MenuRequestDto menuRequestDto, @PathVariable Long restaurantId) {
+    public ResponseEntity<MenuResponseDto> createMenu(@Auth AuthUser auth, @RequestBody MenuRequestDto menuRequestDto, @PathVariable(name = "id") Long restaurantId) {
         MenuResponseDto menuResponseDto = menuService.createMenu(auth, menuRequestDto, restaurantId);
 
         return new ResponseEntity<>(menuResponseDto, HttpStatus.CREATED);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<MenuResponseDto> updateMenu(@Auth AuthUser auth, @RequestBody MenuRequestDto menuRequestDto, @PathVariable Long menuId) {
+    public ResponseEntity<MenuResponseDto> updateMenu(@Auth AuthUser auth, @RequestBody MenuRequestDto menuRequestDto, @PathVariable(name = "id") Long menuId) {
         MenuResponseDto menuResponseDto = menuService.updateMenu(auth, menuRequestDto, menuId);
 
         return new ResponseEntity<>(menuResponseDto, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Long> deleteMenu(@Auth AuthUser auth, @PathVariable Long menuId) {
+    public ResponseEntity<Long> deleteMenu(@Auth AuthUser auth, @PathVariable(name = "id") Long menuId) {
         Long deletedMenuId = menuService.deleteMenu(auth, menuId);
 
         return new ResponseEntity<>(deletedMenuId, HttpStatus.OK);

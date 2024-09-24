@@ -25,6 +25,7 @@ public class JwtFilter implements Filter {
 
   private final JwtUtil jwtUtil;
   private final Pattern authPattern = Pattern.compile("^/api/auth/(signin|signup)$");
+  private final Pattern getOrderPattern = Pattern.compile("^/api/restaurant/.*/order");
 
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {
@@ -64,22 +65,22 @@ public class JwtFilter implements Filter {
 
       UserRole userRole = UserRole.valueOf(claims.get("userRole", String.class));
 
-      if (isOwnerUrl(httpRequest,url)) {
+      if (isOwnerUrl(httpRequest, url)) {
         //사장님만 이용할 수 있는 api
         if (!userRole.equals(UserRole.OWNER)) {
-          httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED,"접근 권한이 없습니다.");
+          httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "접근 권한이 없습니다.");
           return;
         }
-        chain.doFilter(request,response);
+        chain.doFilter(request, response);
         return;
       }
-      if (!isOwnerUrl(httpRequest,url)) {
+      if (!isOwnerUrl(httpRequest, url)) {
         //유저만 이용할 수 있는 api
         if (!userRole.equals(UserRole.USER)) {
-          httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED,"접근 권한이 없습니다.");
+          httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "접근 권한이 없습니다.");
           return;
         }
-        chain.doFilter(request,response);
+        chain.doFilter(request, response);
         return;
       }
 
@@ -106,8 +107,8 @@ public class JwtFilter implements Filter {
     if ((url.startsWith("/api/eats") &&
         (httpRequest.getMethod().equals("POST")
             || httpRequest.getMethod().equals("PATCH")
-            || httpRequest.getMethod().equals("DELETE"))) || url.startsWith(
-        "/api/restaurant/**/order") || url.startsWith("/api/owner") || url.startsWith(
+            || httpRequest.getMethod().equals("DELETE"))) || getOrderPattern.matcher(url).matches()
+        || url.startsWith("/api/owner") || url.startsWith(
         "/api/orderStatus")) {
       return true;
     }

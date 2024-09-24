@@ -102,8 +102,9 @@ public class MenuService {
                 () -> new IllegalArgumentException("restaurant not found")
         );
         List<Menu> menus = menuRepository.findAllByRestaurant(restaurant);
+        List<Menu> activeMenus = menus.stream().filter(menu -> menu.isActive()).toList();
 
-        return menus.stream()
+        return activeMenus.stream()
                 .map(AllMenuResponseDto::new)
                 .collect(Collectors.toList());
 

@@ -2,14 +2,18 @@ package com.sparta.eatsapp.menu.controller;
 
 import com.sparta.eatsapp.auth.dto.AuthUser;
 import com.sparta.eatsapp.common.annotation.Auth;
+import com.sparta.eatsapp.menu.dto.AllMenuResponseDto;
 import com.sparta.eatsapp.menu.dto.MenuRequestDto;
 import com.sparta.eatsapp.menu.dto.MenuResponseDto;
+import com.sparta.eatsapp.menu.entity.Category;
 import com.sparta.eatsapp.menu.repository.MenuRepository;
 import com.sparta.eatsapp.menu.service.MenuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -39,4 +43,11 @@ public class MenuController {
 
         return new ResponseEntity<>(deletedMenuId, HttpStatus.OK);
     }
+
+    @GetMapping
+    public ResponseEntity<List<AllMenuResponseDto>> getAllMenusByCategory(@RequestParam Category category) {
+        List<AllMenuResponseDto> menus = menuService.getAllMenusByCategory(category);
+        return new ResponseEntity<>(menus, HttpStatus.OK);
+    }
+
 }

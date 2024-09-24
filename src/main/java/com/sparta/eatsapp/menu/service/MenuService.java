@@ -4,6 +4,7 @@ import com.sparta.eatsapp.auth.dto.AuthUser;
 import com.sparta.eatsapp.menu.dto.MenuRequestDto;
 import com.sparta.eatsapp.menu.dto.MenuResponseDto;
 import com.sparta.eatsapp.menu.dto.AllMenuResponseDto;
+import com.sparta.eatsapp.menu.entity.Category;
 import com.sparta.eatsapp.menu.entity.Menu;
 import com.sparta.eatsapp.menu.repository.MenuRepository;
 import com.sparta.eatsapp.restaurant.entity.Restaurant;
@@ -108,5 +109,10 @@ public class MenuService {
                 .map(AllMenuResponseDto::new)
                 .collect(Collectors.toList());
 
+    }
+
+    public List<AllMenuResponseDto> getAllMenusByCategory(Category category) {
+        List<Menu> menus = menuRepository.findAllByCategory(category);
+        return menus.stream().map(AllMenuResponseDto::new).collect(Collectors.toList());
     }
 }

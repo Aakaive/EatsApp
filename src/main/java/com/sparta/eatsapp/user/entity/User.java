@@ -8,6 +8,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -38,17 +39,20 @@ public class User {
   private String nickname;
 
   @Setter
-  @Column(name = "is_deleted",columnDefinition = "TINYINT(1)")
+  @Column(name = "is_deleted", columnDefinition = "TINYINT(1)")
   private boolean isDeleted;
+
+  @Column(name = "kakao_id")
+  private String kakaoId;
 
   @Setter
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private Password password;
 
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   private Map<String, Address> addresses = new HashMap<>();
 
-  public boolean getDeleted(){
+  public boolean getDeleted() {
     return this.isDeleted;
   }
 
@@ -65,13 +69,12 @@ public class User {
     address.setUser(this);
   }
 
-  public void update(String address, String nickname, String location) {
+  public void updateNickname(String nickname) {
+    this.nickname = nickname;
+  }
+
+  public void updateAddress(String address, String location) {
     this.nickname = nickname;
     this.getAddresses().get(location).setAddress(address);
   }
-
-  public void updateNickname(String address) {
-    this.nickname = nickname;
-  }
-
 }

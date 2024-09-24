@@ -24,7 +24,15 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtFilter implements Filter {
 
   private final JwtUtil jwtUtil;
-  private final Pattern authPattern = Pattern.compile("^/auth/(signin|signup)$");
+  private final Pattern authPattern = Pattern.compile("^/api/auth/(signin|signup)$");
+
+  private static final String[] URL = {
+      "/api/eats/menu",
+      "/api/owner",
+      "/api/orderStatus",
+      "/api/eats"
+  };
+
 
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {
@@ -64,11 +72,23 @@ public class JwtFilter implements Filter {
 
       UserRole userRole = UserRole.valueOf(claims.get("userRole", String.class));
 
-      if(!userRole.equals(UserRole.OWNER)){
+      if (isOwnerUrl(httpRequest,url)) {
         //사장님만 이용할 수 있는 api
+        if (!userRole.equals(UserRole.OWNER)) {
+          httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED,"접근 권한이 없습니다.");
+          return;
+        }
+        chain.doFilter(request,response);
+        return;
       }
-      if(!userRole.equals(UserRole.USER)){
+      if (!isOwnerUrl(httpRequest,url)) {
         //유저만 이용할 수 있는 api
+        if (!userRole.equals(UserRole.USER)) {
+          httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED,"접근 권한이 없습니다.");
+          return;
+        }
+        chain.doFilter(request,response);
+        return;
       }
 
       chain.doFilter(request, response);
@@ -88,6 +108,18 @@ public class JwtFilter implements Filter {
       log.error("JWT 토큰 검증 중 오류가 발생했습니다.");
       httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT 토큰 검증 중 오류가 발생했습니다.");
     }
+  }
+
+  private boolean isOwnerUrl(HttpServletRequest httpRequest, String url) {
+    if ((url.startsWith("/api/eats") &&
+        (httpRequest.getMethod().equals("POST")
+            || httpRequest.getMethod().equals("PATCH")
+            || httpRequest.getMethod().equals("DELETE"))) || url.startsWith(
+        "/api/restaurant/**/order") || url.startsWith("/api/owner") || url.startsWith(
+        "/api/orderStatus")) {
+      return true;
+    }
+    return false;
   }
 
   @Override

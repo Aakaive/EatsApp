@@ -32,7 +32,4 @@ public class Menu {
 
     @Column
     private boolean active=true;
-
-    @OneToMany(mappedBy = "menu")
-    List<Order> orderList = new ArrayList<>();
 }

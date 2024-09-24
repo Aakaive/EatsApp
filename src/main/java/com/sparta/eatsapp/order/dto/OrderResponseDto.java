@@ -26,8 +26,8 @@ public class OrderResponseDto {
         this.orderId = order.getOrderId();
         this.userName = order.getUser().getName();
         this.restaurant = order.getRestaurant().getRestaurantName();
-        this.menuName = order.getMenu().getName();
-        this.price = order.getMenu().getPrice();
+        this.menuName = order.getMenuName();
+        this.price = order.getPrice();
         this.number = order.getNumber();
         this.customerRequest = order.getCustomerRequest();
         this.deliveryFee = order.getDeliveryFee();

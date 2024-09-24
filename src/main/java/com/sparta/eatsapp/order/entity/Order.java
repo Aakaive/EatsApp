@@ -41,9 +41,11 @@ public class Order extends Timestamped {
     @JoinColumn(name = "userId")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "menuId")
-    private Menu menu;
+    @Column(name = "menuName", nullable = false, length = 20)
+    private String menuName;
+
+    @Column(name = "price", nullable = false, length = 15)
+    private Long price;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurantId")
@@ -56,11 +58,12 @@ public class Order extends Timestamped {
     public Order(OrderRequestDto requestDto, Restaurant restaurant, User user, Menu menu) {
         this.restaurant = restaurant;
         this.user = user;
-        this.menu = menu;
+        this.menuName = menu.getName();
+        this.price = menu.getPrice();
         this.number = requestDto.getNumber();
         this.customerRequest = requestDto.getCustomerRequest();
         this.deliveryFee = 2000;
-        this.totalPrice = this.deliveryFee + (int)(this.menu.getPrice() * this.number);
+        this.totalPrice = this.deliveryFee + (int)(this.price * this.number);
         this.orderStatus = OrderStatus.REQUEST;
     }
 

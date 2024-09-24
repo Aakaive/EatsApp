@@ -1,10 +1,11 @@
 package com.sparta.eatsapp.restaurant.service;
 
 import com.sparta.eatsapp.auth.dto.AuthUser;
-import com.sparta.eatsapp.common.annotation.Auth;
-import com.sparta.eatsapp.config.AuthUserArgumentResolver;
+import com.sparta.eatsapp.menu.dto.AllMenuResponseDto;
+import com.sparta.eatsapp.menu.service.MenuService;
 import com.sparta.eatsapp.restaurant.dto.RestaurantRequestDto;
 import com.sparta.eatsapp.restaurant.dto.RestaurantResponseDto;
+import com.sparta.eatsapp.restaurant.dto.ViewRestaurantResponseDto;
 import com.sparta.eatsapp.restaurant.entity.Restaurant;
 import com.sparta.eatsapp.restaurant.repository.RestaurantRepository;
 import com.sparta.eatsapp.user.entity.User;
@@ -20,6 +21,7 @@ import java.util.List;
 public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final UserRepository userRepository;
+    private final MenuService menuService;
 
     public RestaurantResponseDto createRestaurant(AuthUser auth, RestaurantRequestDto requestDto) {
         User user = userRepository.findById(auth.getId()).orElseThrow(
@@ -91,7 +93,6 @@ public class RestaurantService {
         if(!restaurant.getOwner().equals(user)){
             new IllegalArgumentException("You are not the owner of this restaurant");
         }
-
         return restaurant;
     }
 
@@ -100,10 +101,13 @@ public class RestaurantService {
         return restaurants.stream().filter(Restaurant::isStatus).toList();
     }
 
-    public RestaurantResponseDto getRestaurantById(Long id) {
-        Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(
+    public ViewRestaurantResponseDto getRestaurantById(Long restaurantId) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(
                 () -> new IllegalArgumentException("Restaurant not found")
         );
-        return new RestaurantResponseDto(restaurant);
+
+        List<AllMenuResponseDto> allMenuResponseDtos = menuService.getAllMenus(restaurant.getId());
+
+        return new ViewRestaurantResponseDto(restaurant, allMenuResponseDtos);
     }
 }

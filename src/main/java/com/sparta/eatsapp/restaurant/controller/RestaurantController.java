@@ -3,18 +3,24 @@ package com.sparta.eatsapp.restaurant.controller;
 
 import com.sparta.eatsapp.auth.dto.AuthUser;
 import com.sparta.eatsapp.common.annotation.Auth;
-import com.sparta.eatsapp.config.AuthUserArgumentResolver;
 import com.sparta.eatsapp.restaurant.dto.RestaurantRequestDto;
 import com.sparta.eatsapp.restaurant.dto.RestaurantResponseDto;
 import com.sparta.eatsapp.restaurant.dto.RestaurantsResponseDto;
+import com.sparta.eatsapp.restaurant.dto.ViewRestaurantResponseDto;
 import com.sparta.eatsapp.restaurant.entity.Restaurant;
 import com.sparta.eatsapp.restaurant.service.RestaurantService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -56,8 +62,8 @@ public class RestaurantController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RestaurantResponseDto> getRestaurantById(@PathVariable Long id) {
-        RestaurantResponseDto responseDto = restaurantService.getRestaurantById(id);
+    public ResponseEntity<ViewRestaurantResponseDto> getRestaurantById(@PathVariable(name = "id") Long restaurantId) {
+        ViewRestaurantResponseDto responseDto = restaurantService.getRestaurantById(restaurantId);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 }

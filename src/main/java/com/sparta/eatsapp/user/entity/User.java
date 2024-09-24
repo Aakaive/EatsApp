@@ -9,6 +9,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,57 +30,62 @@ import lombok.Setter;
 @NoArgsConstructor
 public class User {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
-  @Column(length = 254)
-  private String email;
-  @Enumerated(EnumType.STRING)
-  private UserRole role;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(length = 254)
+    private String email;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
-  @Column(name = "market_count")
-  private int marketCount;
-  private String name;
-  private String nickname;
+    @Column(name = "market_count")
+    private int marketCount;
+    private String name;
+    private String nickname;
 
-  @Setter
-  @Column(name = "is_deleted",columnDefinition = "TINYINT(1)")
-  private boolean isDeleted;
+    @Setter
+    @Column(name = "is_deleted", columnDefinition = "TINYINT(1)")
+    private boolean isDeleted;
 
-  @Setter
-  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-  private Password password;
+    @Column(name = "kakao_id")
+    private String kakaoId;
 
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-  private Map<String, Address> addresses = new HashMap<>();
+    @Setter
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Password password;
 
-  @OneToMany(mappedBy = "user")
-  List<Order> orderList = new ArrayList<>();
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Map<String, Address> addresses = new HashMap<>();
 
-  public boolean getDeleted(){
-    return this.isDeleted;
-  }
 
-  public User(String email, String name, UserRole role,
-      String nickname) {
-    this.email = email;
-    this.name = name;
-    this.role = role;
-    this.nickname = nickname;
-  }
+    @OneToMany(mappedBy = "user")
+    List<Order> orderList = new ArrayList<>();
 
-  public void addAddresses(Address address) {
-    this.addresses.put(address.getLocation(), address);
-    address.setUser(this);
-  }
 
-  public void update(String address, String nickname, String location) {
-    this.nickname = nickname;
-    this.getAddresses().get(location).setAddress(address);
-  }
+    public boolean getDeleted() {
+        return this.isDeleted;
+    }
 
-  public void updateNickname(String address) {
-    this.nickname = nickname;
-  }
 
+    public User(String email, String name, UserRole role,
+                String nickname) {
+        this.email = email;
+        this.name = name;
+        this.role = role;
+        this.nickname = nickname;
+    }
+
+    public void addAddresses(Address address) {
+        this.addresses.put(address.getLocation(), address);
+        address.setUser(this);
+    }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void updateAddress(String address, String location) {
+        this.nickname = nickname;
+        this.getAddresses().get(location).setAddress(address);
+    }
 }

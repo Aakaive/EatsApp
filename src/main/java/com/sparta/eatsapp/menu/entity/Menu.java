@@ -30,6 +30,9 @@ public class Menu {
     @JoinColumn(name = "restaurant_name", nullable = false)
     private Restaurant restaurant;
 
+    @Column
+    private boolean active=true;
+
     @OneToMany(mappedBy = "menu")
     List<Order> orderList = new ArrayList<>();
 }

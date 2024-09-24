@@ -44,7 +44,7 @@ public class MenuController {
         return new ResponseEntity<>(deletedMenuId, HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping("/category")
     public ResponseEntity<List<AllMenuResponseDto>> getAllMenusByCategory(@RequestParam Category category) {
         List<AllMenuResponseDto> menus = menuService.getAllMenusByCategory(category);
         return new ResponseEntity<>(menus, HttpStatus.OK);

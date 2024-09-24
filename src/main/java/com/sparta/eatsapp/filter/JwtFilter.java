@@ -26,14 +26,6 @@ public class JwtFilter implements Filter {
   private final JwtUtil jwtUtil;
   private final Pattern authPattern = Pattern.compile("^/api/auth/(signin|signup)$");
 
-  private static final String[] URL = {
-      "/api/eats/menu",
-      "/api/owner",
-      "/api/orderStatus",
-      "/api/eats"
-  };
-
-
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {
     Filter.super.init(filterConfig);

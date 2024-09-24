@@ -49,5 +49,4 @@ public class MenuController {
         List<AllMenuResponseDto> menus = menuService.getAllMenusByCategory(category);
         return new ResponseEntity<>(menus, HttpStatus.OK);
     }
-
 }

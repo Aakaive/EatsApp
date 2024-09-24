@@ -11,11 +11,10 @@ import java.time.LocalDateTime;
 public class OrderResponseDto {
 
     private Long orderId;
-    private String customerName;
-    //String marketName;
+    private String userName;
     private String restaurant;
     private String menuName;
-    private int price;
+    private Long price;
     private int number;
     private String customerRequest;
     private int deliveryFee;
@@ -25,10 +24,10 @@ public class OrderResponseDto {
 
     public OrderResponseDto(Order order) {
         this.orderId = order.getOrderId();
-        //this.customerName = customerName;
+        this.userName = order.getUser().getName();
         this.restaurant = order.getRestaurant().getRestaurantName();
-        this.menuName = order.getMenuName();
-        this.price = order.getPrice();
+        this.menuName = order.getMenu().getName();
+        this.price = order.getMenu().getPrice();
         this.number = order.getNumber();
         this.customerRequest = order.getCustomerRequest();
         this.deliveryFee = order.getDeliveryFee();

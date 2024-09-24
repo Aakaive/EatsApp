@@ -1,5 +1,7 @@
 package com.sparta.eatsapp.review.controller;
 
+import com.sparta.eatsapp.auth.dto.AuthUser;
+import com.sparta.eatsapp.common.annotation.Auth;
 import com.sparta.eatsapp.review.dto.ReviewRequestDto;
 import com.sparta.eatsapp.review.dto.ReviewResponseDto;
 import com.sparta.eatsapp.review.entity.Review;
@@ -20,8 +22,8 @@ public class ReviewController {
 
     // 리뷰 생성
     @PostMapping("/review")
-    public ResponseEntity<ReviewResponseDto> save(@RequestBody ReviewRequestDto requestDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.save(requestDto));
+    public ResponseEntity<ReviewResponseDto> save(@RequestBody ReviewRequestDto requestDto, @Auth AuthUser authUser) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.save(requestDto, authUser));
     }
 
     // 해당 매장의 모든 리뷰 조회
@@ -32,7 +34,7 @@ public class ReviewController {
 
     // 리뷰 수정
     @PutMapping("/review/{reviewId}")
-    public ResponseEntity<ReviewResponseDto> modifiedReview(@PathVariable Long reviewId, @RequestBody ReviewRequestDto requestDto) {
-        return ResponseEntity.ok(reviewService.modifiedReview(reviewId, requestDto));
+    public ResponseEntity<ReviewResponseDto> modifiedReview(@PathVariable Long reviewId, @RequestBody ReviewRequestDto requestDto, @Auth AuthUser authUser) {
+        return ResponseEntity.ok(reviewService.modifiedReview(reviewId, requestDto, authUser));
     }
 }

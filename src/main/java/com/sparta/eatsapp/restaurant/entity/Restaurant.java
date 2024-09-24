@@ -1,5 +1,6 @@
 package com.sparta.eatsapp.restaurant.entity;
 
+import com.sparta.eatsapp.order.entity.Order;
 import com.sparta.eatsapp.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -7,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -36,4 +39,7 @@ public class Restaurant {
 
     @Column(nullable = false)
     private boolean status = true;
+
+    @OneToMany(mappedBy = "restaurant")
+    List<Order> orderList = new ArrayList<>();
 }

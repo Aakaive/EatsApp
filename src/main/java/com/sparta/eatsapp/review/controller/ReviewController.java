@@ -33,7 +33,7 @@ public class ReviewController {
     }
 
     // 리뷰 수정
-    @PutMapping("/review/{reviewId}")
+    @PatchMapping("/review/{reviewId}")
     public ResponseEntity<ReviewResponseDto> modifiedReview(@PathVariable Long reviewId, @RequestBody ReviewRequestDto requestDto, @Auth AuthUser authUser) {
         return ResponseEntity.ok(reviewService.modifiedReview(reviewId, requestDto, authUser));
     }

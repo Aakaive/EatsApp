@@ -1,6 +1,7 @@
 package com.sparta.eatsapp.menu.service;
 
 import com.sparta.eatsapp.auth.dto.AuthUser;
+import com.sparta.eatsapp.menu.dto.AllMenuResponseDto;
 import com.sparta.eatsapp.menu.dto.MenuRequestDto;
 import com.sparta.eatsapp.menu.dto.MenuResponseDto;
 import com.sparta.eatsapp.menu.entity.Category;
@@ -24,6 +25,7 @@ import static org.mockito.Mockito.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -135,5 +137,64 @@ public class MenuServiceTest {
 
     }
 
+    @Test
+    void testGetAllMenusByCategory() {
+        Long userId = 1L;
+        Category category1 = Category.Western;
+        Category category2 = Category.Chinese;
+        List<Menu> menus = addMenus(restaurants.get(0));
+        List<Menu> menusFiltered = menus.stream().filter(menu -> menu.getCategory().equals(category2)).toList();
+        List<AllMenuResponseDto> menusFilteredDto = menusFiltered.stream().map(AllMenuResponseDto::new).collect(Collectors.toList());
+        when(menuRepository.findAllByCategory(category2)).thenReturn(menusFiltered);
 
+
+        //when
+        List<AllMenuResponseDto> menusByCategory = menuService.getAllMenusByCategory(category2);
+
+        // then
+        assertNotNull(menusByCategory);
+        for(int i=0; i<menusFilteredDto.size(); i++){
+            assertEquals(menusFilteredDto.get(i).getMenuId(), menusByCategory.get(i).getMenuId());
+            assertEquals(menusFilteredDto.get(i).getMenuName(), menusByCategory.get(i).getMenuName());
+            assertEquals(menusFilteredDto.get(i).getPrice(), menusByCategory.get(i).getPrice());
+        }
+        verify(menuRepository).findAllByCategory(category2);
+    }
+
+    public List<Menu> addMenus(Restaurant restaurant){
+        List<Menu> menus = new ArrayList<>();
+        Menu menu1 = new Menu();
+        menu1.setId(1L);
+        menu1.setName("마파두부");
+        menu1.setPrice(12000L);
+        menu1.setCategory(Category.Chinese);
+        menu1.setRestaurant(restaurant);
+        menus.add(menu1);
+
+        Menu menu2 = new Menu();
+        menu2.setId(2L);
+        menu2.setName("스파게티");
+        menu2.setPrice(16000L);
+        menu2.setCategory(Category.Western);
+        menu2.setRestaurant(restaurant);
+        menus.add(menu2);
+
+        Menu menu3 = new Menu();
+        menu3.setId(3L);
+        menu3.setName("짜장면");
+        menu3.setPrice(8000L);
+        menu3.setCategory(Category.Chinese);
+        menu3.setRestaurant(restaurant);
+        menus.add(menu3);
+
+        Menu menu4 = new Menu();
+        menu4.setId(4L);
+        menu4.setName("아메리카노");
+        menu4.setPrice(1800L);
+        menu4.setCategory(Category.Dessert);
+        menu4.setRestaurant(restaurant);
+        menus.add(menu4);
+
+        return menus;
+    }
 }

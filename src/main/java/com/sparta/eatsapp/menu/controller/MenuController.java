@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/eats/menu")
+@RequestMapping("/api/eats/menu")
 public class MenuController {
 
     private final MenuService menuService;
@@ -44,10 +44,9 @@ public class MenuController {
         return new ResponseEntity<>(deletedMenuId, HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping("/category")
     public ResponseEntity<List<AllMenuResponseDto>> getAllMenusByCategory(@RequestParam Category category) {
         List<AllMenuResponseDto> menus = menuService.getAllMenusByCategory(category);
         return new ResponseEntity<>(menus, HttpStatus.OK);
     }
-
 }

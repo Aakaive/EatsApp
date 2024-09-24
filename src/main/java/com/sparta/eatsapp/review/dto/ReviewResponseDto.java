@@ -15,7 +15,7 @@ public class ReviewResponseDto {
 
     public  ReviewResponseDto(Review review) {
         this.userName = review.getOrder().getUser().getName();
-        this.menuName = review.getOrder().getMenu().getName();
+        this.menuName = review.getOrder().getMenuName();
         this.star = review.getStar();
         this.content = review.getContent();
         this.createdAt = review.getCreatedAt();

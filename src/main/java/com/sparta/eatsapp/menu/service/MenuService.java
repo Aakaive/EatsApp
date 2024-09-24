@@ -3,10 +3,9 @@ package com.sparta.eatsapp.menu.service;
 import com.sparta.eatsapp.auth.dto.AuthUser;
 import com.sparta.eatsapp.menu.dto.MenuRequestDto;
 import com.sparta.eatsapp.menu.dto.MenuResponseDto;
-import com.sparta.eatsapp.menu.dto.MenuResponseDtos;
+import com.sparta.eatsapp.menu.dto.AllMenuResponseDto;
 import com.sparta.eatsapp.menu.entity.Menu;
 import com.sparta.eatsapp.menu.repository.MenuRepository;
-import com.sparta.eatsapp.restaurant.dto.RestaurantsResponseDto;
 import com.sparta.eatsapp.restaurant.entity.Restaurant;
 import com.sparta.eatsapp.restaurant.repository.RestaurantRepository;
 import com.sparta.eatsapp.user.entity.User;
@@ -14,8 +13,8 @@ import com.sparta.eatsapp.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -98,13 +97,15 @@ public class MenuService {
         return menuId;
     }
 
-    public List<MenuResponseDtos> getAllMenus(Long restaurantId) {
+    public List<AllMenuResponseDto> getAllMenus(Long restaurantId) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(
                 () -> new IllegalArgumentException("restaurant not found")
         );
         List<Menu> menus = menuRepository.findAllByRestaurant(restaurant);
-        List<MenuResponseDtos> menuResponseDtos = menus.stream().map(MenuResponseDtos::new).toList();
 
-        return menuResponseDtos;
+        return menus.stream()
+                .map(AllMenuResponseDto::new)
+                .collect(Collectors.toList());
+
     }
 }

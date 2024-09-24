@@ -1,10 +1,7 @@
 package com.sparta.eatsapp.restaurant.service;
 
 import com.sparta.eatsapp.auth.dto.AuthUser;
-import com.sparta.eatsapp.common.annotation.Auth;
-import com.sparta.eatsapp.config.AuthUserArgumentResolver;
-import com.sparta.eatsapp.menu.dto.MenuResponseDtos;
-import com.sparta.eatsapp.menu.repository.MenuRepository;
+import com.sparta.eatsapp.menu.dto.AllMenuResponseDto;
 import com.sparta.eatsapp.menu.service.MenuService;
 import com.sparta.eatsapp.restaurant.dto.RestaurantRequestDto;
 import com.sparta.eatsapp.restaurant.dto.RestaurantResponseDto;
@@ -17,7 +14,6 @@ import com.sparta.eatsapp.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -111,8 +107,8 @@ public class RestaurantService {
                 () -> new IllegalArgumentException("Restaurant not found")
         );
 
-        List<MenuResponseDtos> menuResponseDtos = menuService.getAllMenus(restaurant.getId());
+        List<AllMenuResponseDto> allMenuResponseDtos = menuService.getAllMenus(restaurant.getId());
 
-        return new ViewRestaurantResponseDto(restaurant, menuResponseDtos);
+        return new ViewRestaurantResponseDto(restaurant, allMenuResponseDtos);
     }
 }

@@ -3,9 +3,11 @@ package com.sparta.eatsapp.user.service;
 import com.sparta.eatsapp.address.entity.Address;
 import com.sparta.eatsapp.address.repository.AddressRepository;
 import com.sparta.eatsapp.auth.dto.AuthUser;
+import com.sparta.eatsapp.common.exception.AuthException;
 import com.sparta.eatsapp.user.dto.request.UserPatchRequest;
 import com.sparta.eatsapp.user.dto.response.UserResponse;
 import com.sparta.eatsapp.user.entity.User;
+import com.sparta.eatsapp.common.exception.NotFoundException;
 import com.sparta.eatsapp.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +21,7 @@ public class UserService {
 
   public UserResponse getUser(Long userid) {
     User user = userRepository.findById(userid)
-        .orElseThrow(() -> new IllegalArgumentException("등록된 유저가 없습니다."));
+        .orElseThrow(() -> new NotFoundException("등록된 유저가 없습니다."));
     isDeleted(user);
     return new UserResponse(user);
   }
@@ -27,14 +29,14 @@ public class UserService {
   public UserResponse updateUser(AuthUser authUser, Long userid,
       UserPatchRequest userPatchRequest) {
     User user = userRepository.findById(userid)
-        .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 유저입니다."));
+        .orElseThrow(() -> new NotFoundException("등록되지 않은 유저입니다."));
     isDeleted(user);
-    if (!authUser.getId().equals(userid)) {
-      throw new IllegalArgumentException("권한이 없습니다.");
+    if (!authUser.getId().equals(user.getId())) {
+      throw new AuthException("권한이 없습니다.");
     }
     if ((userPatchRequest.getAddress() == null && userPatchRequest.getLocation() != null) ||
         (userPatchRequest.getAddress() != null && userPatchRequest.getLocation() == null)) {
-      throw new IllegalArgumentException("위치와 주소는 둘다 입력해야 합니다.");
+      throw new IllegalArgumentException("위치와 주소는 둘 다 입력해야 합니다.");
     }
 
     if (userPatchRequest.getLocation() != null && userPatchRequest.getAddress() != null) {
@@ -57,9 +59,9 @@ public class UserService {
 
   public Long deleteUser(Long userid, AuthUser authUser) {
     User user = userRepository.findById(userid)
-        .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 유저입니다."));
+        .orElseThrow(() -> new NotFoundException("등록되지 않은 유저입니다."));
     if (!user.getId().equals(authUser.getId())) {
-      throw new IllegalArgumentException("권한이 없습니다.");
+      throw new AuthException("권한이 없습니다.");
     }
     isDeleted(user);
     user.setDeleted(true);
@@ -69,7 +71,7 @@ public class UserService {
 
   public void isDeleted(User user) {
     if (user.getDeleted()) {
-      throw new IllegalArgumentException("삭제된 유저입니다.");
+      throw new IllegalStateException("삭제된 유저입니다.");
     }
   }
 

@@ -4,6 +4,7 @@ import com.sparta.eatsapp.auth.dto.AuthUser;
 import com.sparta.eatsapp.auth.dto.request.SigninRequest;
 import com.sparta.eatsapp.auth.dto.request.SignupRequest;
 import com.sparta.eatsapp.password.entity.Password;
+import com.sparta.eatsapp.user.dto.request.UserPatchRequest;
 import com.sparta.eatsapp.user.entity.User;
 import com.sparta.eatsapp.user.enums.UserRole;
 
@@ -32,4 +33,10 @@ public class TestData {
       .build();
 
   public static AuthUser testAuth = new AuthUser(1L,"dnwls111@naver.com");
+
+  public static UserPatchRequest userPatchRequest = UserPatchRequest.builder()
+      .nickname("땅콩")
+      .location("집")
+      .address("제주도")
+      .build();
 }

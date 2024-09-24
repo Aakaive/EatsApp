@@ -20,9 +20,6 @@ public class Review extends Timestamped {
     @Column(name = "reviewId")
     private Long reviewId;
 
-    @Column(name = "orderId", nullable = false, length = 20)
-    private Long orderId;
-
     @Column(name = "restaurantId", nullable = false, length = 20)
     private Long restaurantId;
 
@@ -32,8 +29,11 @@ public class Review extends Timestamped {
     @Column(name = "star", nullable = false, length = 10)
     private int star;
 
+    @OneToOne(mappedBy = "review")
+    private Order order;
+
     public Review(ReviewRequestDto requestDto, Order order) {
-        this.orderId = requestDto.getOrderId();
+        this.order = order;
         this.restaurantId = order.getRestaurant().getId();
         this.content = requestDto.getContent();
         this.star = requestDto.getStar();

@@ -15,6 +15,7 @@ import static org.mockito.BDDMockito.given;
 
 import com.sparta.eatsapp.address.repository.AddressRepository;
 import com.sparta.eatsapp.auth.dto.response.SignupResponse;
+import com.sparta.eatsapp.common.exception.NotFoundException;
 import com.sparta.eatsapp.config.JwtUtil;
 import com.sparta.eatsapp.config.PasswordEncoder;
 import com.sparta.eatsapp.password.repository.PasswordRepository;
@@ -108,12 +109,12 @@ public class AuthServiceTest {
   }
 
   @Test
-  public void 삭제된_유저_로그인_시_IAE_에러() {
+  public void 삭제된_유저_로그인_시_NFE_에러() {
     //given
     ReflectionTestUtils.setField(testUser, "isDeleted", true);
     given(userRepository.findByEmail(anyString())).willReturn(Optional.ofNullable(testUser));
     //when & then
-    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+    NotFoundException exception = assertThrows(NotFoundException.class,
         () -> authService.signin(signinRequest)
     );
     assertEquals("삭제된 유저입니다.", exception.getMessage());

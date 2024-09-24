@@ -5,6 +5,7 @@ import com.sparta.eatsapp.address.repository.AddressRepository;
 import com.sparta.eatsapp.auth.dto.request.SigninRequest;
 import com.sparta.eatsapp.auth.dto.request.SignupRequest;
 import com.sparta.eatsapp.auth.dto.response.SignupResponse;
+import com.sparta.eatsapp.common.exception.NotFoundException;
 import com.sparta.eatsapp.config.JwtUtil;
 import com.sparta.eatsapp.config.PasswordEncoder;
 import com.sparta.eatsapp.password.entity.Password;
@@ -55,7 +56,7 @@ public class AuthService {
     User user = userRepository.findByEmail(signinRequest.getEmail())
         .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 이메일입니다."));
     if (user.getDeleted()) {
-      throw new IllegalArgumentException("삭제된 유저입니다.");
+      throw new NotFoundException("삭제된 유저입니다.");
     }
     if (!passwordEncoder.matches(signinRequest.getPassword(), user.getPassword().getPassword())) {
       throw new IllegalArgumentException("비밀번호가 틀렸습니다.");

@@ -93,7 +93,6 @@ public class RestaurantService {
         if(!restaurant.getOwner().equals(user)){
             new IllegalArgumentException("You are not the owner of this restaurant");
         }
-
         return restaurant;
     }
 

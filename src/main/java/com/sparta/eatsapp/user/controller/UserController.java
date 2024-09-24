@@ -38,7 +38,7 @@ public class UserController {
   }
 
   @DeleteMapping("/{userid}")
-  public ResponseEntity deleteUser(@Auth AuthUser authUser, @PathVariable Long userid) {
+  public ResponseEntity<Long> deleteUser(@Auth AuthUser authUser, @PathVariable Long userid) {
     Long userId = userService.deleteUser(userid, authUser);
     return ResponseEntity.status(HttpStatus.ACCEPTED).body(userId);
   }

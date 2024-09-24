@@ -1,6 +1,7 @@
 package com.sparta.eatsapp.filter;
 
 import com.sparta.eatsapp.config.JwtUtil;
+import com.sparta.eatsapp.user.enums.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -21,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class JwtFilter implements Filter {
+
   private final JwtUtil jwtUtil;
   private final Pattern authPattern = Pattern.compile("^/auth/(signin|signup)$");
 
@@ -31,7 +33,8 @@ public class JwtFilter implements Filter {
 
   @Override
   public void doFilter(
-      ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+      ServletRequest request, ServletResponse response, FilterChain chain)
+      throws IOException, ServletException {
     HttpServletRequest httpRequest = (HttpServletRequest) request;
     HttpServletResponse httpResponse = (HttpServletResponse) response;
 
@@ -54,9 +57,19 @@ public class JwtFilter implements Filter {
     try {
       // JWT 유효성 검사와 claims 추출
       Claims claims = jwtUtil.extractClaims(jwt);
-      // 사용자 정보를 ArgumentResolver 로 넘기기 위해 HttpServletRequest 에 세팅
+
       httpRequest.setAttribute("userId", Long.parseLong(claims.getSubject()));
       httpRequest.setAttribute("email", claims.get("email", String.class));
+      httpRequest.setAttribute("userRole", claims.get("userRole", String.class));
+
+      UserRole userRole = UserRole.valueOf(claims.get("userRole", String.class));
+
+      if(!userRole.equals(UserRole.OWNER)){
+        //사장님만 이용할 수 있는 api
+      }
+      if(!userRole.equals(UserRole.USER)){
+        //유저만 이용할 수 있는 api
+      }
 
       chain.doFilter(request, response);
     } catch (SecurityException | MalformedJwtException e) {

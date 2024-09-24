@@ -26,4 +26,7 @@ public class Menu {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "restaurant_name", nullable = false)
     private Restaurant restaurant;
+
+    @Column
+    private boolean active=true;
 }

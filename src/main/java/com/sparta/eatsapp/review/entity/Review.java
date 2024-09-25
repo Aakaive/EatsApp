@@ -4,6 +4,8 @@ import com.sparta.eatsapp.common.Timestamped;
 import com.sparta.eatsapp.order.entity.Order;
 import com.sparta.eatsapp.review.dto.ReviewRequestDto;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,7 +28,9 @@ public class Review extends Timestamped {
     @Column(name = "content", nullable = false, length = 100)
     private String content;
 
-    @Column(name = "star", nullable = false, length = 10)
+    @Min(value = 1)
+    @Max(value = 5)
+    @Column(name = "star", nullable = false)
     private int star;
 
     @OneToOne(mappedBy = "review")

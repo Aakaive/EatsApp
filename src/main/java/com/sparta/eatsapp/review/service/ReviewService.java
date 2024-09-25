@@ -1,7 +1,6 @@
 package com.sparta.eatsapp.review.service;
 
 import com.sparta.eatsapp.auth.dto.AuthUser;
-import com.sparta.eatsapp.common.annotation.Auth;
 import com.sparta.eatsapp.order.entity.Order;
 import com.sparta.eatsapp.order.entity.OrderStatus;
 import com.sparta.eatsapp.order.service.OrderService;
@@ -9,12 +8,11 @@ import com.sparta.eatsapp.review.dto.ReviewRequestDto;
 import com.sparta.eatsapp.review.dto.ReviewResponseDto;
 import com.sparta.eatsapp.review.entity.Review;
 import com.sparta.eatsapp.review.repository.ReviewRepository;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

@@ -32,7 +32,7 @@ public class TestData {
       .password("dnwls111")
       .build();
 
-  public static AuthUser testAuth = new AuthUser(1L,"dnwls111@naver.com");
+  public static AuthUser testAuth = new AuthUser(1L,"dnwls111@naver.com", UserRole.USER,testPassword.getPassword());
 
   public static UserPatchRequest userPatchRequest = UserPatchRequest.builder()
       .nickname("땅콩")

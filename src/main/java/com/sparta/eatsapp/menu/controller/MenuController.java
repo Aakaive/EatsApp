@@ -11,6 +11,7 @@ import com.sparta.eatsapp.menu.service.MenuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class MenuController {
     private final MenuService menuService;
     private final MenuRepository menuRepository;
 
+    @PreAuthorize("hasRole('OWNER')")
     @PostMapping("/{id}")
     public ResponseEntity<MenuResponseDto> createMenu(@Auth AuthUser auth, @RequestBody MenuRequestDto menuRequestDto, @PathVariable(name = "id") Long restaurantId) {
         MenuResponseDto menuResponseDto = menuService.createMenu(auth, menuRequestDto, restaurantId);
@@ -30,6 +32,7 @@ public class MenuController {
         return new ResponseEntity<>(menuResponseDto, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('OWNER')")
     @PatchMapping("/{id}")
     public ResponseEntity<MenuResponseDto> updateMenu(@Auth AuthUser auth, @RequestBody MenuRequestDto menuRequestDto, @PathVariable(name = "id") Long menuId) {
         MenuResponseDto menuResponseDto = menuService.updateMenu(auth, menuRequestDto, menuId);
@@ -37,6 +40,7 @@ public class MenuController {
         return new ResponseEntity<>(menuResponseDto, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('OWNER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Long> deleteMenu(@Auth AuthUser auth, @PathVariable(name = "id") Long menuId) {
         Long deletedMenuId = menuService.deleteMenu(auth, menuId);

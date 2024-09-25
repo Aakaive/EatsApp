@@ -13,6 +13,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -28,18 +29,21 @@ import org.springframework.web.bind.annotation.RestController;
 public class RestaurantController {
     private final RestaurantService restaurantService;
 
+    @PreAuthorize("hasRole('OWNER')")
     @PostMapping
     public ResponseEntity<RestaurantResponseDto> createRestaurant(@Auth AuthUser auth, @RequestBody RestaurantRequestDto requestDto) {
         RestaurantResponseDto responseDto = restaurantService.createRestaurant(auth, requestDto);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('OWNER')")
     @PatchMapping("/{id}")
     public ResponseEntity<RestaurantResponseDto> updateRestaurant(@Auth AuthUser auth, @RequestBody RestaurantRequestDto requestDto, @PathVariable Long id) {
         RestaurantResponseDto responseDto = restaurantService.updateRestaurant(auth, requestDto, id);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('OWNER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Long> deleteRestaurant(@Auth AuthUser auth, @PathVariable Long id) {
         Long responseId = restaurantService.deleteRestaurant(auth, id);

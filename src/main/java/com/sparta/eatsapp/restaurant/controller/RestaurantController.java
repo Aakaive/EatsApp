@@ -27,47 +27,53 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/eats")
 public class RestaurantController {
-    private final RestaurantService restaurantService;
 
-    @PreAuthorize("hasRole('OWNER')")
-    @PostMapping
-    public ResponseEntity<RestaurantResponseDto> createRestaurant(@Auth AuthUser auth, @RequestBody RestaurantRequestDto requestDto) {
-        RestaurantResponseDto responseDto = restaurantService.createRestaurant(auth, requestDto);
-        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
-    }
+  private final RestaurantService restaurantService;
 
-    @PreAuthorize("hasRole('OWNER')")
-    @PatchMapping("/{id}")
-    public ResponseEntity<RestaurantResponseDto> updateRestaurant(@Auth AuthUser auth, @RequestBody RestaurantRequestDto requestDto, @PathVariable Long id) {
-        RestaurantResponseDto responseDto = restaurantService.updateRestaurant(auth, requestDto, id);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
-    }
+  @PreAuthorize("hasRole('OWNER')")
+  @PostMapping
+  public ResponseEntity<RestaurantResponseDto> createRestaurant(@Auth AuthUser auth,
+      @RequestBody RestaurantRequestDto requestDto) {
+    RestaurantResponseDto responseDto = restaurantService.createRestaurant(auth, requestDto);
+    return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
+  }
 
-    @PreAuthorize("hasRole('OWNER')")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Long> deleteRestaurant(@Auth AuthUser auth, @PathVariable Long id) {
-        Long responseId = restaurantService.deleteRestaurant(auth, id);
-        return new ResponseEntity<>(responseId, HttpStatus.OK);
-    }
+  @PreAuthorize("hasRole('OWNER')")
+  @PatchMapping("/{id}")
+  public ResponseEntity<RestaurantResponseDto> updateRestaurant(@Auth AuthUser auth,
+      @RequestBody RestaurantRequestDto requestDto, @PathVariable Long id) {
+    RestaurantResponseDto responseDto = restaurantService.updateRestaurant(auth, requestDto, id);
+    return new ResponseEntity<>(responseDto, HttpStatus.OK);
+  }
 
-    @GetMapping
-    public ResponseEntity<List<RestaurantsResponseDto>> getAllRestaurants() {
-        // 모든 레스토랑을 가져옴
-        List<Restaurant> restaurants = restaurantService.getAllRestaurants();
+  @PreAuthorize("hasRole('OWNER')")
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Long> deleteRestaurant(@Auth AuthUser auth, @PathVariable Long id) {
+    Long responseId = restaurantService.deleteRestaurant(auth, id);
+    return new ResponseEntity<>(responseId, HttpStatus.OK);
+  }
 
-        // Restaurant 엔티티를 RestaurantResponseDto로 변환
-        List<RestaurantsResponseDto> responseDtos = restaurants.stream()
-                .map(RestaurantsResponseDto::new)
-                .toList();
+  @PreAuthorize("hasRole('USER')")
+  @GetMapping
+  public ResponseEntity<List<RestaurantsResponseDto>> getAllRestaurants() {
+    // 모든 레스토랑을 가져옴
+    List<Restaurant> restaurants = restaurantService.getAllRestaurants();
 
-        // 응답을 반환
-        return ResponseEntity.ok(responseDtos);
+    // Restaurant 엔티티를 RestaurantResponseDto로 변환
+    List<RestaurantsResponseDto> responseDtos = restaurants.stream()
+        .map(RestaurantsResponseDto::new)
+        .toList();
 
-    }
+    // 응답을 반환
+    return ResponseEntity.ok(responseDtos);
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ViewRestaurantResponseDto> getRestaurantById(@PathVariable(name = "id") Long restaurantId) {
-        ViewRestaurantResponseDto responseDto = restaurantService.getRestaurantById(restaurantId);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
-    }
+  }
+
+  @PreAuthorize("hasRole('USER')")
+  @GetMapping("/{id}")
+  public ResponseEntity<ViewRestaurantResponseDto> getRestaurantById(
+      @PathVariable(name = "id") Long restaurantId) {
+    ViewRestaurantResponseDto responseDto = restaurantService.getRestaurantById(restaurantId);
+    return new ResponseEntity<>(responseDto, HttpStatus.OK);
+  }
 }
